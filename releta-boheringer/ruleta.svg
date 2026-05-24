@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg id="Capa_1" data-name="Capa 1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 1255.44 1255.44">
+  <defs>
+    <style>
+      .cls-1 {
+        fill: #58b46e;
+        filter: url(#drop-shadow-1);
+      }
+    </style>
+    <filter id="drop-shadow-1" x="0" y="0" width="1255.44" height="1255.44" filterUnits="userSpaceOnUse">
+      <feOffset dx="-9" dy="4"/>
+      <feGaussianBlur result="blur" stdDeviation="21"/>
+      <feFlood flood-color="#0d302a" flood-opacity=".6"/>
+      <feComposite in2="blur" operator="in"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+  </defs>
+  <path class="cls-1" d="M636.65,59.18c-311.83,0-564.62,252.79-564.62,564.62s252.79,564.62,564.62,564.62,564.62-252.79,564.62-564.62S948.48,59.18,636.65,59.18ZM636.65,1157.27c-294.62,0-533.46-238.84-533.46-533.46S342.02,90.34,636.65,90.34s533.46,238.84,533.46,533.46-238.84,533.46-533.46,533.46Z"/>
+</svg>
