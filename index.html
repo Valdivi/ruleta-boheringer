@@ -8,16 +8,13 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
 <style>
 
-/* ================================================================
-   VARIABLES
-================================================================ */
 :root {
   --bg:       #0d302a;
   --green:    #58b46e;
   --green-dk: #3dbf6a;
   --white:    #ffffff;
-  --correct:  #3dbf6a;
-  --wrong:    #e05252;
+  --correct:  #b9efce;   /* verde menta suave */
+  --wrong:    #f6ceb9;   /* durazno suave      */
   --font:     'DM Sans', system-ui, sans-serif;
   --font-d:   'DM Serif Display', Georgia, serif;
   --slide-t:  0.65s;
@@ -36,7 +33,7 @@ html, body {
 
 #app { position:fixed; inset:0; overflow:hidden; }
 
-/* ── SLIDE SYSTEM ───────────────────────── */
+/* ── SLIDE ── */
 .screen {
   position:absolute; inset:0;
   will-change:transform;
@@ -50,34 +47,33 @@ html, body {
 /* ================================================================
    PANTALLA 1 — RULETA
 ================================================================ */
-#scr-wheel {
-  background: var(--bg);
-  overflow: hidden;
-}
+#scr-wheel { background:var(--bg); overflow:hidden; }
 
-/* Glow sutil */
 #scr-wheel::before {
-  content:'';
-  position:absolute; inset:0;
-  background: radial-gradient(ellipse 70% 60% at 65% 50%,
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 70% 60% at 65% 50%,
     rgba(88,180,110,0.07) 0%, transparent 70%);
   pointer-events:none;
 }
 
-/* — Logo título — */
+/* Logo — centrado arriba, 20% más grande */
 .logo-wrap {
-  position:absolute; top:4%; right:4%; z-index:20;
+  position:absolute;
+  top: 4%;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index:20;
 }
 .logo-wrap img {
-  height: clamp(50px, 8vh, 110px);
+  height: clamp(60px, 9.5vh, 132px);   /* +20% vs anterior clamp(50px,8vh,110px) */
   width: auto;
   display:block;
 }
 
-/* — Wheel wrapper — */
+/* Wheel wrapper — ajustado para mostrar ~70% */
 .wheel-wrap {
   position:absolute;
-  top:50%; left:-18%;
+  top:50%; left:-10%;
   transform:translateY(-50%);
   width: clamp(320px, 88vmin, 1050px);
   aspect-ratio:1/1;
@@ -86,41 +82,64 @@ html, body {
   z-index:10;
 }
 
-/* Capas del wheel (todas absolute, llenan el wrapper) */
-.wheel-layer {
+/* Capa giratoria (ruleta.png) */
+#wheel-spin {
   position:absolute; top:0; left:0;
   width:100%; height:100%;
   display:block; object-fit:contain;
+  transform-origin:50% 50%;
+  /* transition inyectada por JS */
 }
 
-/* Capa giratoria */
-#wheel-spin {
-  transform-origin: 50% 50%;
-  /* transition se asigna en JS */
+/* Contorno estático (borde exterior) — mismo tamaño que el wrapper */
+.wheel-contorno {
+  position:absolute; top:0; left:0;
+  width:100%; height:100%;
+  display:block; object-fit:contain;
+  pointer-events:none; z-index:3;
 }
 
-/* Puntero (fuera del SVG, pegado a la derecha del wrapper) */
+/* Centro decorativo — pequeño, centrado */
+.wheel-centro {
+  position:absolute;
+  top:50%; left:50%;
+  transform:translate(-50%,-50%);
+  width:26%; height:26%;
+  object-fit:contain;
+  pointer-events:none; z-index:4;
+}
+
+/* Puntero */
 .wheel-pointer {
   position:absolute;
-  right: -5%;
-  top:50%; transform:translateY(-50%);
+  right:-5%; top:50%;
+  transform:translateY(-50%);
   width:10%;
   pointer-events:none; z-index:15;
   filter:drop-shadow(0 2px 8px rgba(0,0,0,0.35));
 }
 
-/* — Dog + piso — */
+/* Dog + piso */
 .dog-wrap {
   position:absolute;
-  bottom:0; right:3%;
-  width: clamp(100px, 21vw, 290px);
+  bottom:0; right:0;
+  width: clamp(160px, 30vw, 420px);   /* más grande */
   pointer-events:none; z-index:5;
-  display:flex; flex-direction:column;
+  display:flex; flex-direction:column; align-items:center;
+  overflow:hidden;                     /* evita que el piso desborde */
 }
-.dog-wrap video { display:block; width:100%; flex-shrink:0; }
-.dog-floor      { display:block; width:100%; flex-shrink:0; }
+.dog-wrap video {
+  display:block;
+  width:80%;
+  flex-shrink:0;
+}
+.dog-floor {
+  display:block;
+  width:100%;
+  flex-shrink:0;
+}
 
-/* — Tap hint — */
+/* Tap hint */
 .tap-hint {
   position:absolute; top:50%; right:5%;
   transform:translateY(-50%);
@@ -130,26 +149,27 @@ html, body {
   transition:opacity 0.5s;
   animation:breathe 2.5s ease-in-out infinite;
 }
-@keyframes breathe {
-  0%,100%{opacity:.45;} 50%{opacity:.95;}
-}
+@keyframes breathe { 0%,100%{opacity:.45;} 50%{opacity:.95;} }
 
 /* ================================================================
    PANTALLA 2 — PREGUNTAS
+   Degradado: oscuro izquierda → claro derecha (suave, oscuro 60%)
 ================================================================ */
 #scr-question {
   background: linear-gradient(to right,
-    var(--green)  0%,
-    #1a5c46      28%,
-    var(--bg)    50%,
-    var(--bg)   100%);
+    #0d302a  0%,
+    #0d302a 35%,
+    #153c30 52%,
+    #266348 68%,
+    #3d9460 84%,
+    #58b46e 100%
+  );
   overflow-y:auto; overflow-x:hidden;
 }
 
-/* Patrón punteado sutil */
 #scr-question::before {
   content:''; position:absolute; inset:0;
-  background-image: radial-gradient(circle, rgba(88,180,110,0.06) 1px, transparent 1px);
+  background-image:radial-gradient(circle, rgba(88,180,110,0.05) 1px, transparent 1px);
   background-size:28px 28px;
   pointer-events:none; z-index:0;
 }
@@ -164,9 +184,8 @@ html, body {
 
 /* Badge número */
 .q-badge { display:flex; align-items:center; gap:14px; }
-
 .q-num-circle {
-  width: clamp(44px,7vh,82px); height: clamp(44px,7vh,82px);
+  width:clamp(44px,7vh,82px); height:clamp(44px,7vh,82px);
   background:var(--green); border-radius:50%;
   display:flex; align-items:center; justify-content:center;
   font-size:clamp(1.1rem,3.5vh,2.2rem); font-weight:800; color:white;
@@ -179,7 +198,7 @@ html, body {
   font-size:clamp(0.7rem,1.6vh,1rem); font-weight:600;
 }
 
-/* Texto de la pregunta */
+/* Texto pregunta */
 .q-text {
   color:var(--white);
   font-size:clamp(1.1rem,3vh,2.3rem); font-weight:700;
@@ -195,7 +214,7 @@ html, body {
 .ans-btn {
   background:rgba(255,255,255,0.95);
   border:3px solid transparent; border-radius:999px;
-  padding: clamp(12px,2.2vh,26px) clamp(18px,3vw,40px);
+  padding:clamp(12px,2.2vh,26px) clamp(18px,3vw,40px);
   font-size:clamp(0.9rem,2.3vh,1.65rem);
   font-weight:500; font-family:var(--font); color:#0d2a24;
   cursor:pointer; text-align:left;
@@ -206,7 +225,7 @@ html, body {
 }
 .ans-btn:not(.disabled):hover,
 .ans-btn:not(.disabled):active {
-  border-color:var(--green);
+  border-color:var(--green-dk);
   transform:translateX(8px);
   box-shadow:0 4px 20px rgba(88,180,110,0.25);
 }
@@ -214,26 +233,34 @@ html, body {
 .ans-icon {
   font-style:normal; font-size:1.25em;
   min-width:1.5em; text-align:center; flex-shrink:0;
-  transition:transform .3s;
 }
 
-/* Estados de respuesta */
+/* ✅ Correcta — verde menta #b9efce, texto oscuro */
 .ans-btn.is-correct {
-  background:var(--correct); color:white; border-color:var(--correct);
+  background: #b9efce;
+  color: #0a2b1e;
+  border-color: #b9efce;
   transform:none;
-  box-shadow:0 4px 24px rgba(61,191,106,0.45);
+  box-shadow:0 4px 24px rgba(185,239,206,0.45);
 }
 .ans-btn.is-correct .ans-icon { animation:pop .4s ease; }
 
+/* ❌ Incorrecta — durazno #f6ceb9, texto oscuro */
 .ans-btn.is-wrong {
-  background:var(--wrong); color:white; border-color:var(--wrong);
+  background: #f6ceb9;
+  color: #4a1a08;
+  border-color: #f6ceb9;
   transform:none;
 }
+
+/* Mostrar correcta en verde cuando fallan */
 .ans-btn.show-correct {
-  background:var(--correct); color:white; border-color:var(--correct);
+  background: #b9efce;
+  color: #0a2b1e;
+  border-color: #b9efce;
   animation:reveal .5s ease;
 }
-.ans-btn.disabled { pointer-events:none; opacity:.65; }
+.ans-btn.disabled { pointer-events:none; opacity:.7; }
 
 @keyframes pop    { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
 @keyframes reveal { 0%{transform:translateX(0)} 25%{transform:translateX(-6px)} 50%{transform:translateX(6px)} 100%{transform:translateX(0)} }
@@ -246,19 +273,29 @@ html, body {
   display:none;
   animation:fadeUp .45s cubic-bezier(0.175,0.885,0.32,1.275);
 }
-.q-result.correct { display:block; background:rgba(61,191,106,0.18); color:#89f7ae; border:2px solid rgba(61,191,106,0.3); }
-.q-result.wrong   { display:block; background:rgba(224,82,82,0.18);  color:#ffaaaa; border:2px solid rgba(224,82,82,0.3); }
+.q-result.correct {
+  display:block;
+  background:rgba(185,239,206,0.2);
+  color:#b9efce;
+  border:2px solid rgba(185,239,206,0.35);
+}
+.q-result.wrong {
+  display:block;
+  background:rgba(246,206,185,0.2);
+  color:#f6ceb9;
+  border:2px solid rgba(246,206,185,0.35);
+}
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px) scale(.96)} to{opacity:1;transform:translateY(0) scale(1)} }
 
-/* Imagen decorativa (abajo derecha) */
+/* Imagen decorativa — el doble de grande */
 .q-deco {
-  position:absolute; bottom:0; right:2%;
-  width:clamp(80px,17vw,200px);
+  position:absolute; bottom:0; right:1%;
+  width: clamp(160px, 34vw, 400px);   /* 2x anterior: clamp(80px,17vw,200px) */
   pointer-events:none; z-index:0;
 }
 .q-deco img { display:block; width:100%; height:auto; }
 
-/* Botón Volver — ABAJO IZQUIERDA */
+/* Volver — abajo izquierda */
 .btn-volver {
   position:absolute; bottom:4%; left:5%;
   background:transparent;
@@ -279,19 +316,17 @@ html, body {
 /* ================================================================
    RESPONSIVE
 ================================================================ */
-/* Pantalla 55" portrait */
 @media (min-height:1400px) {
-  .wheel-wrap { left:-10%; width:clamp(700px,82vmin,1100px); }
+  .wheel-wrap { left:-8%; width:clamp(700px,82vmin,1100px); }
   .tap-hint   { font-size:clamp(1rem,2vh,1.6rem); }
+  .q-deco     { width:clamp(220px,38vw,500px); }
 }
-/* Desktop landscape */
 @media (orientation:landscape) and (min-width:900px) {
   .wheel-wrap { left:3%; }
   .q-answers  { display:grid; grid-template-columns:1fr 1fr; }
 }
-/* Móvil pequeño */
 @media (max-width:380px) {
-  .wheel-wrap { left:-25%; width:115vw; }
+  .wheel-wrap { left:-22%; width:115vw; }
   .q-content  { padding:8% 6% 22% 6%; }
 }
 
@@ -301,70 +336,44 @@ html, body {
 
 <div id="app">
 
-<!-- ══════════════════════════════════════════════════
+<!-- ══════════════════════════════════════
      PANTALLA 1 · RULETA
-══════════════════════════════════════════════════ -->
+══════════════════════════════════════ -->
 <div id="scr-wheel" class="screen">
 
-  <!-- Logo / título (top right) -->
+  <!-- Logo centrado arriba -->
   <div class="logo-wrap">
     <img src="logo_titulo.png" alt="Boehringer Ingelheim">
   </div>
 
-  <!-- Ensamble de la ruleta -->
+  <!-- Ensamble ruleta -->
   <div class="wheel-wrap" id="wheelWrap">
 
-    <!--
-      CAPA 1 · GIRA · ruleta.svg
-      Esta capa es la que rota con la animación CSS.
-      Contiene los 10 segmentos de color y los números.
-    -->
+    <!-- CAPA 1 · GIRA · ruleta.png (10 segmentos + números) -->
     <img id="wheel-spin"
-         class="wheel-layer"
-         src="ruleta.svg"
-         alt=""
-         draggable="false">
+         src="ruleta.png"
+         alt="" draggable="false">
 
-    <!--
-      CAPA 2 · FIJA (encima) · contorno_ruleta.png
-      El aro/borde exterior verde. No gira.
-    -->
-    <img class="wheel-layer"
+    <!-- CAPA 2 · FIJA · contorno exterior verde -->
+    <img class="wheel-contorno"
          src="contorno_ruleta.png"
-         alt=""
-         draggable="false"
-         style="pointer-events:none;">
+         alt="" draggable="false">
 
-    <!--
-      CAPA 3 · FIJA (encima) · centro_ruleta.png
-      El círculo central con el logo BI. No gira.
-    -->
-    <img class="wheel-layer"
+    <!-- CAPA 3 · FIJA · centro decorativo (pequeño, centrado) -->
+    <img class="wheel-centro"
          src="centro_ruleta.png"
-         alt=""
-         draggable="false"
-         style="pointer-events:none;">
+         alt="" draggable="false">
 
-    <!--
-      PUNTERO · puntero.svg
-      Flecha blanca que indica el número ganador.
-    -->
+    <!-- PUNTERO -->
     <img class="wheel-pointer"
          src="puntero.svg"
-         alt=""
-         draggable="false">
+         alt="" draggable="false">
 
-  </div><!-- /wheel-wrap -->
-
-  <!-- Mensaje de instrucción -->
-  <div class="tap-hint" id="tapHint">
-    Toca la ruleta<br>para girar
   </div>
 
-  <!--
-    PERRO · video_perro.mp4 + piso_para_video.png
-    Video en loop silencioso + piso decorativo debajo.
-  -->
+  <div class="tap-hint" id="tapHint">Toca la ruleta<br>para girar</div>
+
+  <!-- Perro: video encima, piso debajo -->
   <div class="dog-wrap">
     <video autoplay loop muted playsinline>
       <source src="video_perro.mp4" type="video/mp4">
@@ -372,43 +381,35 @@ html, body {
     <img class="dog-floor" src="piso_para_video.png" alt="" draggable="false">
   </div>
 
-</div><!-- /scr-wheel -->
+</div>
 
 
-<!-- ══════════════════════════════════════════════════
+<!-- ══════════════════════════════════════
      PANTALLA 2 · PREGUNTAS
-══════════════════════════════════════════════════ -->
+══════════════════════════════════════ -->
 <div id="scr-question" class="screen">
 
   <div class="q-content">
 
-    <!-- Número de pregunta -->
     <div class="q-badge">
       <div class="q-num-circle" id="q-num">1</div>
       <div class="q-label-txt">Pregunta</div>
     </div>
 
-    <!-- Texto -->
     <div class="q-text" id="q-text"></div>
 
-    <!-- Opciones de respuesta -->
     <div class="q-answers" id="q-answers"></div>
 
-    <!-- Banner correcto / incorrecto -->
     <div class="q-result" id="q-result"></div>
 
   </div>
 
-  <!--
-    Imagen decorativa (abajo derecha)
-    Cambia automáticamente según la pregunta:
-    imagen_decorativa_preguntas-05.png … -09.png
-  -->
+  <!-- Imagen decorativa (abajo derecha, doble de grande) -->
   <div class="q-deco">
     <img id="q-deco-img" src="imagen_decorativa_preguntas-05.png" alt="">
   </div>
 
-  <!-- Botón Volver (abajo izquierda) -->
+  <!-- Volver (abajo izquierda) -->
   <button class="btn-volver" id="btn-volver" onclick="volverRuleta()">
     <svg viewBox="0 0 16 16" fill="currentColor">
       <path d="M3.86 8.75l4.72 4.72a.75.75 0 1 1-1.06 1.06L1.97 8.97a.75.75 0 0 1 0-1.06l5.55-5.56a.75.75 0 0 1 1.06 1.06L3.86 7.25H14a.75.75 0 0 1 0 1.5H3.86z"/>
@@ -416,110 +417,47 @@ html, body {
     Volver al juego
   </button>
 
-</div><!-- /scr-question -->
+</div>
 
-</div><!-- /app -->
+</div>
 
 <script>
 'use strict';
 
-/* ================================================================
-   DATOS: 10 PREGUNTAS
-   Índice 0 = Segmento 1, índice 9 = Segmento 10
-================================================================ */
 const QUESTIONS = [
-  { /* Segmento 1 */
-    q: '¿Qué es una vacuna recombinante?',
-    opts: [
-      'Es una vacuna de virus vivo',
-      'Es una vacuna compuesta por proteínas del virus que desencadenan una respuesta inmunitaria',
-      'Es una vacuna de virus muerto',
-      'Todas las anteriores'
-    ],
-    correct: 1
-  },
-  { /* Segmento 2 */
-    q: 'Característica correcta del terapéutico Previcox',
-    opts: [
-      '5 mg/kg',
-      'Se puede dar con o sin alimento',
-      'Una toma cada 24 hrs',
-      'Todas las anteriores'
-    ],
-    correct: 3
-  },
-  { /* Segmento 3 */
-    q: '¿Qué vector se utiliza para la vacuna C4?',
-    opts: [
-      'Virus de la Viruela del Canario / Virus Canarypox',
-      'Virus de la viruela del mono',
-      'Ambas',
-      'Ninguna de las anteriores'
-    ],
-    correct: 0
-  },
-  { /* Segmento 4 */
-    q: '¿Cuál de las siguientes afirmaciones es correcta con respecto a la vacuna Recombitek?',
-    opts: [
-      'Antígeno recombinante contra moquillo para superar los anticuerpos maternos',
-      'No utiliza adyuvantes',
-      'Vacuna Recombitek C8 tiene la combinación de 4 serovariedades de Leptospira',
-      'Todas las anteriores'
-    ],
-    correct: 3
-  },
-  { /* Segmento 5 */
-    q: '¿Cómo se llama la molécula que contiene Nexgard?',
-    opts: ['Afoxolaner', 'Fluralaner', 'Sarolaner', 'Lotilaner'],
-    correct: 0
-  },
-  { /* Segmento 6 */
-    q: '¿Cuál de estas afirmaciones sobre Nexgard es correcta?',
-    opts: [
-      'Nexgard se puede dar con / sin alimento',
-      'Vía de eliminación: más del 99% biliar y menos de 1% renal',
-      'Más del 80% de perros prefieren Nexgard Spectra sobre otros productos similares',
-      'Todas las anteriores'
-    ],
-    correct: 3
-  },
-  { /* Segmento 7 */
-    q: '¿Se puede utilizar todos los productos de la familia Nexgard en etapa de gestación y lactación?',
-    opts: ['✓  Verdadero', '✗  Falso'],
-    correct: 0
-  },
-  { /* Segmento 8 */
-    q: '¿Nexgard Combo es un antiparasitario interno y externo?',
-    opts: ['✓  Verdadero', '✗  Falso'],
-    correct: 0
-  },
-  { /* Segmento 9 */
-    q: 'Marque la respuesta correcta sobre Nexgard Combo',
-    opts: [
-      'Desarrollado específicamente para gatos',
-      'Seguro en gestantes y lactantes',
-      'El antiparasitario de más amplio espectro',
-      'Todas las anteriores'
-    ],
-    correct: 3
-  },
-  { /* Segmento 10 */
-    q: '¿Qué parásitos internos ayuda a controlar NexGard Spectra?',
-    opts: [
-      'Ascaridios, ancilostómidos y tricúridos',
-      'Solo tenias',
-      'Solo protozoarios',
-      'Ningún parásito intestinal'
-    ],
-    correct: 0
-  }
+  { q:'¿Qué es una vacuna recombinante?',
+    opts:['Es una vacuna de virus vivo','Es una vacuna compuesta por proteínas del virus que desencadenan una respuesta inmunitaria','Es una vacuna de virus muerto','Todas las anteriores'],
+    correct:1 },
+  { q:'Característica correcta del terapéutico Previcox',
+    opts:['5 mg/kg','Se puede dar con o sin alimento','Una toma cada 24 hrs','Todas las anteriores'],
+    correct:3 },
+  { q:'¿Qué vector se utiliza para la vacuna C4?',
+    opts:['Virus de la Viruela del Canario / Virus Canarypox','Virus de la viruela del mono','Ambas','Ninguna de las anteriores'],
+    correct:0 },
+  { q:'¿Cuál de las siguientes afirmaciones es correcta con respecto a la vacuna Recombitek?',
+    opts:['Antígeno recombinante contra moquillo para superar los anticuerpos maternos','No utiliza adyuvantes','Vacuna Recombitek C8 tiene la combinación de 4 serovariedades de Leptospira','Todas las anteriores'],
+    correct:3 },
+  { q:'¿Cómo se llama la molécula que contiene Nexgard?',
+    opts:['Afoxolaner','Fluralaner','Sarolaner','Lotilaner'],
+    correct:0 },
+  { q:'¿Cuál de estas afirmaciones sobre Nexgard es correcta?',
+    opts:['Nexgard se puede dar con / sin alimento','Vía de eliminación: más del 99% biliar y menos de 1% renal','Más del 80% de perros prefieren Nexgard Spectra sobre otros productos similares','Todas las anteriores'],
+    correct:3 },
+  { q:'¿Se puede utilizar todos los productos de la familia Nexgard en etapa de gestación y lactación?',
+    opts:['✓  Verdadero','✗  Falso'],
+    correct:0 },
+  { q:'¿Nexgard Combo es un antiparasitario interno y externo?',
+    opts:['✓  Verdadero','✗  Falso'],
+    correct:0 },
+  { q:'Marque la respuesta correcta sobre Nexgard Combo',
+    opts:['Desarrollado específicamente para gatos','Seguro en gestantes y lactantes','El antiparasitario de más amplio espectro','Todas las anteriores'],
+    correct:3 },
+  { q:'¿Qué parásitos internos ayuda a controlar NexGard Spectra?',
+    opts:['Ascaridios, ancilostómidos y tricúridos','Solo tenias','Solo protozoarios','Ningún parásito intestinal'],
+    correct:0 }
 ];
 
-/*
-  Imágenes decorativas de la pantalla de preguntas.
-  Cicla entre las 5 disponibles para los 10 segmentos:
-  Seg 1→05, 2→06, 3→07, 4→08, 5→09, 6→05, 7→06 ...
-*/
+/* Imagen decorativa por pregunta (cicla entre las 5) */
 const DECO_IMGS = [
   'imagen_decorativa_preguntas-05.png',
   'imagen_decorativa_preguntas-06.png',
@@ -528,131 +466,85 @@ const DECO_IMGS = [
   'imagen_decorativa_preguntas-09.png',
 ];
 
-/* ================================================================
-   CONFIGURACIÓN DE LA RULETA
-================================================================ */
-const N_SEG    = 10;           // total de segmentos
-const DEG_SEG  = 360 / N_SEG; // 36° por segmento
-const PTR_DEG  = 90;           // el puntero está a las 3 en punto (90° desde las 12)
-const SPIN_MS  = 4500;         // duración del giro en ms
-const PAUSE_MS = 1500;         // pausa tras el giro antes de mostrar pregunta
+const N_SEG    = 10;
+const DEG_SEG  = 360 / N_SEG;
+const PTR_DEG  = 90;
+const SPIN_MS  = 4500;
+const PAUSE_MS = 1500;
 
 let spinning = false;
-let totalDeg = 0;   // acumula rotación total (para no resetear a 0 entre giros)
+let totalDeg = 0;
 
-/* ================================================================
-   SPIN
-================================================================ */
 function handleWheelClick() {
   if (spinning) return;
   spinning = true;
-
-  // Ocultar hint
   document.getElementById('tapHint').style.opacity = '0';
-
-  // Segmento aleatorio 1–10
   const target = Math.floor(Math.random() * N_SEG) + 1;
   doSpin(target);
 }
 
 function doSpin(seg) {
   const el = document.getElementById('wheel-spin');
-
-  /*
-    Ángulo del centro del segmento desde las 12 (sentido horario):
-    seg=1 → 0°, seg=2 → 36°, ..., seg=10 → 324°
-  */
   const segCenter  = (seg - 1) * DEG_SEG;
-
-  /*
-    ¿Cuánto hay que rotar para que ese segmento quede bajo el puntero (90°)?
-    Ecuación: (segCenter + R) mod 360 = 90  →  R = (90 - segCenter + 360) % 360
-  */
   const alignAngle = ((PTR_DEG - segCenter) % 360 + 360) % 360;
+  const curMod     = totalDeg % 360;
+  let   delta      = (alignAngle - curMod + 360) % 360;
+  if (delta < 10) delta += 360;
+  const newTotal   = totalDeg + 5 * 360 + delta;
 
-  // Delta desde la posición visual actual
-  const curMod = totalDeg % 360;
-  let   delta  = (alignAngle - curMod + 360) % 360;
-  if (delta < 10) delta += 360;  // garantizar al menos algo de giro extra
-
-  const newTotal = totalDeg + 5 * 360 + delta; // 5 vueltas completas + alineación
-
-  el.style.transition = `transform ${SPIN_MS}ms cubic-bezier(0.08, 0.92, 0.18, 1)`;
+  el.style.transition = `transform ${SPIN_MS}ms cubic-bezier(0.08,0.92,0.18,1)`;
   el.style.transform  = `rotate(${newTotal}deg)`;
   totalDeg = newTotal;
 
-  // Tras el giro → pausa → mostrar pregunta
   setTimeout(() => {
     setTimeout(() => showQuestion(seg), PAUSE_MS);
   }, SPIN_MS);
 }
 
-/* ================================================================
-   MOSTRAR PREGUNTA
-================================================================ */
 function showQuestion(num) {
   const data = QUESTIONS[num - 1];
 
-  // Número y texto
   document.getElementById('q-num').textContent  = num;
   document.getElementById('q-text').textContent = data.q;
+  document.getElementById('q-deco-img').src      = DECO_IMGS[(num - 1) % 5];
 
-  // Imagen decorativa (cicla entre las 5)
-  document.getElementById('q-deco-img').src = DECO_IMGS[(num - 1) % 5];
-
-  // Limpiar estado anterior
   const resultEl = document.getElementById('q-result');
-  resultEl.className   = 'q-result';
+  resultEl.className = 'q-result';
   resultEl.textContent = '';
   document.getElementById('btn-volver').classList.remove('show');
 
-  // Generar botones de respuesta
   const answersEl = document.getElementById('q-answers');
   answersEl.innerHTML = '';
-
   data.opts.forEach((text, idx) => {
     const btn = document.createElement('button');
     btn.className = 'ans-btn';
     btn.innerHTML = `<em class="ans-icon"></em><span>${text}</span>`;
-    btn.addEventListener('click', () => onAnswer(btn, idx, data.correct), { once: true });
+    btn.addEventListener('click', () => onAnswer(btn, idx, data.correct), { once:true });
     answersEl.appendChild(btn);
   });
 
-  // Deslizar a pantalla de preguntas
   document.getElementById('app').classList.add('show-q');
 }
 
-/* ================================================================
-   RESPUESTA DEL PARTICIPANTE
-================================================================ */
 function onAnswer(clickedBtn, selected, correct) {
-  // Deshabilitar todos los botones inmediatamente
   const allBtns = [...document.querySelectorAll('.ans-btn')];
   allBtns.forEach(b => b.classList.add('disabled'));
 
   if (selected === correct) {
-    /* ✅ Respuesta correcta */
     clickedBtn.classList.remove('disabled');
     clickedBtn.classList.add('is-correct');
     clickedBtn.querySelector('.ans-icon').textContent = '✓';
     setResult(true);
-
   } else {
-    /* ❌ Respuesta incorrecta */
     clickedBtn.classList.remove('disabled');
     clickedBtn.classList.add('is-wrong');
     clickedBtn.querySelector('.ans-icon').textContent = '✗';
-
-    // Iluminar la respuesta correcta en verde
-    const correctBtn = allBtns[correct];
-    correctBtn.classList.remove('disabled');
-    correctBtn.classList.add('show-correct');
-    correctBtn.querySelector('.ans-icon').textContent = '✓';
-
+    allBtns[correct].classList.remove('disabled');
+    allBtns[correct].classList.add('show-correct');
+    allBtns[correct].querySelector('.ans-icon').textContent = '✓';
     setResult(false);
   }
 
-  // Mostrar botón Volver
   document.getElementById('btn-volver').classList.add('show');
 }
 
@@ -664,18 +556,8 @@ function setResult(ok) {
     : '❌ Incorrecto. La respuesta correcta está marcada en verde.';
 }
 
-/* ================================================================
-   VOLVER A RULETA
-================================================================ */
 function volverRuleta() {
-  // Deslizar de vuelta
   document.getElementById('app').classList.remove('show-q');
-
-  /*
-    Mientras la pantalla de ruleta está fuera de vista (durante la
-    animación de slide), la reseteamos silenciosamente para el
-    siguiente participante.
-  */
   setTimeout(() => {
     const el = document.getElementById('wheel-spin');
     el.style.transition = 'none';
@@ -683,23 +565,13 @@ function volverRuleta() {
     totalDeg  = 0;
     spinning  = false;
     document.getElementById('tapHint').style.opacity = '1';
-  }, 350); // a mitad de la animación de slide (650ms)
+  }, 350);
 }
 
-/* ================================================================
-   INIT
-================================================================ */
 document.addEventListener('DOMContentLoaded', () => {
   const wrap = document.getElementById('wheelWrap');
-
-  // Click (desktop / pantalla táctil)
   wrap.addEventListener('click', handleWheelClick);
-
-  // Touch (previene el doble disparo click+touch)
-  wrap.addEventListener('touchend', e => {
-    e.preventDefault();
-    handleWheelClick();
-  }, { passive: false });
+  wrap.addEventListener('touchend', e => { e.preventDefault(); handleWheelClick(); }, { passive:false });
 });
 </script>
 </body>
