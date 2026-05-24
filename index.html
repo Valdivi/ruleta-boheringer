@@ -9,15 +9,15 @@
 <style>
 
 :root {
-  --bg:       #0d302a;
-  --green:    #58b46e;
-  --green-dk: #3dbf6a;
-  --white:    #ffffff;
-  --correct:  #b9efce;   /* verde menta suave */
-  --wrong:    #f6ceb9;   /* durazno suave      */
-  --font:     'DM Sans', system-ui, sans-serif;
-  --font-d:   'DM Serif Display', Georgia, serif;
-  --slide-t:  0.65s;
+  --bg:      #0d302a;
+  --green:   #58b46e;
+  --gdk:     #3dbf6a;
+  --white:   #ffffff;
+  --correct: #b9efce;
+  --wrong:   #f6ceb9;
+  --font:    'DM Sans', system-ui, sans-serif;
+  --font-d:  'DM Serif Display', Georgia, serif;
+  --slide-t: 0.65s;
 }
 
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
@@ -51,38 +51,47 @@ html, body {
 
 #scr-wheel::before {
   content:''; position:absolute; inset:0;
-  background:radial-gradient(ellipse 70% 60% at 65% 50%,
-    rgba(88,180,110,0.07) 0%, transparent 70%);
+  background:radial-gradient(ellipse 70% 60% at 60% 50%,
+    rgba(88,180,110,0.06) 0%, transparent 70%);
   pointer-events:none;
 }
 
-/* Logo — centrado arriba, 20% más grande */
+/* ── Logo ──
+   Referencia 55": 699px de ancho en pantalla 1920px de alto → 36.4vh
+*/
 .logo-wrap {
   position:absolute;
-  top: 4%;
+  top: 3.5%;
   left: 50%;
   transform: translateX(-50%);
   z-index:20;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
 .logo-wrap img {
-  height: clamp(60px, 9.5vh, 132px);   /* +20% vs anterior clamp(50px,8vh,110px) */
-  width: auto;
+  width: clamp(160px, 36.4vh, 700px);
+  height: auto;
   display:block;
 }
 
-/* Wheel wrapper — ajustado para mostrar ~70% */
+/* ── Wheel wrapper ──
+   Referencia 55": 1255.44px en pantalla 1920px de alto → 65.4vh
+   Offset izquierdo: -25% del viewport (parte de la ruleta sale por la izquierda)
+*/
 .wheel-wrap {
   position:absolute;
-  top:50%; left:-10%;
-  transform:translateY(-50%);
-  width: clamp(320px, 88vmin, 1050px);
-  aspect-ratio:1/1;
+  top: 50%;
+  left: -25%;
+  transform: translateY(-50%);
+  width: clamp(300px, 65.4vh, 1256px);
+  aspect-ratio: 1 / 1;
   cursor:pointer;
   user-select:none; -webkit-user-select:none;
   z-index:10;
 }
 
-/* Capa giratoria (ruleta.png) */
+/* Capa giratoria ruleta.png */
 #wheel-spin {
   position:absolute; top:0; left:0;
   width:100%; height:100%;
@@ -91,7 +100,7 @@ html, body {
   /* transition inyectada por JS */
 }
 
-/* Contorno estático (borde exterior) — mismo tamaño que el wrapper */
+/* Contorno verde (fijo, mismo tamaño que wrapper) */
 .wheel-contorno {
   position:absolute; top:0; left:0;
   width:100%; height:100%;
@@ -99,69 +108,82 @@ html, body {
   pointer-events:none; z-index:3;
 }
 
-/* Centro decorativo — pequeño, centrado */
+/* Centro decorativo (pequeño, centrado, fijo) */
 .wheel-centro {
   position:absolute;
   top:50%; left:50%;
   transform:translate(-50%,-50%);
-  width:26%; height:26%;
-  object-fit:contain;
+  width:25%; height:25%;
+  display:block; object-fit:contain;
   pointer-events:none; z-index:4;
 }
 
-/* Puntero */
+/* Puntero
+   Referencia 55": 207.9172px sobre rueda de 1255.44px → 16.56% del wrapper
+*/
 .wheel-pointer {
   position:absolute;
-  right:-5%; top:50%;
-  transform:translateY(-50%);
-  width:10%;
+  right: -8%;
+  top:50%; transform:translateY(-50%);
+  width: 16.56%;
   pointer-events:none; z-index:15;
-  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.35));
+  filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3));
 }
 
-/* Dog + piso */
-.dog-wrap {
-  position:absolute;
-  bottom:0; right:0;
-  width: clamp(160px, 30vw, 420px);   /* más grande */
-  pointer-events:none; z-index:5;
-  display:flex; flex-direction:column; align-items:center;
-  overflow:hidden;                     /* evita que el piso desborde */
-}
-.dog-wrap video {
-  display:block;
-  width:80%;
-  flex-shrink:0;
-}
-.dog-floor {
-  display:block;
-  width:100%;
-  flex-shrink:0;
-}
-
-/* Tap hint */
+/* ── Tap hint ── */
 .tap-hint {
-  position:absolute; top:50%; right:5%;
+  position:absolute;
+  top:50%; right:5%;
   transform:translateY(-50%);
   color:rgba(255,255,255,0.5);
-  font-size:clamp(0.8rem,1.8vh,1.2rem); font-weight:500;
+  font-size:clamp(0.8rem,1.8vh,1.3rem); font-weight:500;
   pointer-events:none; text-align:center; line-height:1.7;
   transition:opacity 0.5s;
   animation:breathe 2.5s ease-in-out infinite;
 }
-@keyframes breathe { 0%,100%{opacity:.45;} 50%{opacity:.95;} }
+@keyframes breathe { 0%,100%{opacity:.4;} 50%{opacity:.9;} }
+
+/* ── Dog video ──
+   Referencia 55": 577.58px de alto en pantalla 1920px → 30.1vh
+   Posicionado abajo a la derecha, ENCIMA del piso
+*/
+.dog-wrap {
+  position:absolute;
+  bottom:0; right:3%;
+  height: clamp(120px, 30.1vh, 580px);
+  pointer-events:none; z-index:5;
+}
+.dog-wrap video {
+  height:100%; width:auto;
+  display:block;
+}
+
+/* ── Piso ──
+   Ocupa TODO el ancho de la pantalla (cualquier dispositivo).
+   Diseñado para 1080px de ancho, se estira proporcionalmente.
+   Detrás del perro (z-index menor).
+*/
+.dog-floor {
+  position:absolute;
+  bottom:0; left:0;
+  width:100%;
+  height:auto;
+  display:block;
+  pointer-events:none; z-index:4;
+}
 
 /* ================================================================
    PANTALLA 2 — PREGUNTAS
-   Degradado: oscuro izquierda → claro derecha (suave, oscuro 60%)
+   Degradado: OSCURO izquierda → CLARO derecha
+   Verde oscuro domina 60%, transición suave
 ================================================================ */
 #scr-question {
   background: linear-gradient(to right,
     #0d302a  0%,
-    #0d302a 35%,
-    #153c30 52%,
+    #0d302a 36%,
+    #163d34 53%,
     #266348 68%,
-    #3d9460 84%,
+    #3d9460 83%,
     #58b46e 100%
   );
   overflow-y:auto; overflow-x:hidden;
@@ -169,7 +191,7 @@ html, body {
 
 #scr-question::before {
   content:''; position:absolute; inset:0;
-  background-image:radial-gradient(circle, rgba(88,180,110,0.05) 1px, transparent 1px);
+  background-image:radial-gradient(circle,rgba(88,180,110,0.05) 1px,transparent 1px);
   background-size:28px 28px;
   pointer-events:none; z-index:0;
 }
@@ -177,12 +199,12 @@ html, body {
 .q-content {
   position:relative; min-height:100%;
   display:flex; flex-direction:column; justify-content:center;
-  padding: 7% 9% 20% 9%;
+  padding: 7% 9% 22% 9%;
   gap: clamp(12px, 2.2vh, 30px);
   z-index:1;
 }
 
-/* Badge número */
+/* Badge */
 .q-badge { display:flex; align-items:center; gap:14px; }
 .q-num-circle {
   width:clamp(44px,7vh,82px); height:clamp(44px,7vh,82px);
@@ -198,7 +220,7 @@ html, body {
   font-size:clamp(0.7rem,1.6vh,1rem); font-weight:600;
 }
 
-/* Texto pregunta */
+/* Texto */
 .q-text {
   color:var(--white);
   font-size:clamp(1.1rem,3vh,2.3rem); font-weight:700;
@@ -225,7 +247,7 @@ html, body {
 }
 .ans-btn:not(.disabled):hover,
 .ans-btn:not(.disabled):active {
-  border-color:var(--green-dk);
+  border-color:var(--gdk);
   transform:translateX(8px);
   box-shadow:0 4px 20px rgba(88,180,110,0.25);
 }
@@ -235,29 +257,22 @@ html, body {
   min-width:1.5em; text-align:center; flex-shrink:0;
 }
 
-/* ✅ Correcta — verde menta #b9efce, texto oscuro */
+/* ✅ Correcta */
 .ans-btn.is-correct {
-  background: #b9efce;
-  color: #0a2b1e;
-  border-color: #b9efce;
-  transform:none;
-  box-shadow:0 4px 24px rgba(185,239,206,0.45);
+  background: #b9efce; color:#0a2b1e; border-color:#b9efce;
+  transform:none; box-shadow:0 4px 24px rgba(185,239,206,0.5);
 }
 .ans-btn.is-correct .ans-icon { animation:pop .4s ease; }
 
-/* ❌ Incorrecta — durazno #f6ceb9, texto oscuro */
+/* ❌ Incorrecta */
 .ans-btn.is-wrong {
-  background: #f6ceb9;
-  color: #4a1a08;
-  border-color: #f6ceb9;
+  background: #f6ceb9; color:#4a1a08; border-color:#f6ceb9;
   transform:none;
 }
 
-/* Mostrar correcta en verde cuando fallan */
+/* Muestra la correcta en verde */
 .ans-btn.show-correct {
-  background: #b9efce;
-  color: #0a2b1e;
-  border-color: #b9efce;
+  background:#b9efce; color:#0a2b1e; border-color:#b9efce;
   animation:reveal .5s ease;
 }
 .ans-btn.disabled { pointer-events:none; opacity:.7; }
@@ -265,7 +280,7 @@ html, body {
 @keyframes pop    { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
 @keyframes reveal { 0%{transform:translateX(0)} 25%{transform:translateX(-6px)} 50%{transform:translateX(6px)} 100%{transform:translateX(0)} }
 
-/* Banner resultado */
+/* Resultado */
 .q-result {
   border-radius:16px;
   padding:clamp(10px,1.8vh,20px) clamp(16px,2.5vw,30px);
@@ -273,24 +288,16 @@ html, body {
   display:none;
   animation:fadeUp .45s cubic-bezier(0.175,0.885,0.32,1.275);
 }
-.q-result.correct {
-  display:block;
-  background:rgba(185,239,206,0.2);
-  color:#b9efce;
-  border:2px solid rgba(185,239,206,0.35);
-}
-.q-result.wrong {
-  display:block;
-  background:rgba(246,206,185,0.2);
-  color:#f6ceb9;
-  border:2px solid rgba(246,206,185,0.35);
-}
+.q-result.correct { display:block; background:rgba(185,239,206,0.2); color:#b9efce; border:2px solid rgba(185,239,206,0.35); }
+.q-result.wrong   { display:block; background:rgba(246,206,185,0.2); color:#f6ceb9; border:2px solid rgba(246,206,185,0.35); }
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px) scale(.96)} to{opacity:1;transform:translateY(0) scale(1)} }
 
-/* Imagen decorativa — el doble de grande */
+/* Imagen decorativa — doble de grande
+   Referencia: doble de clamp(80px,17vw,200px)
+*/
 .q-deco {
   position:absolute; bottom:0; right:1%;
-  width: clamp(160px, 34vw, 400px);   /* 2x anterior: clamp(80px,17vw,200px) */
+  width: clamp(160px, 34vw, 400px);
   pointer-events:none; z-index:0;
 }
 .q-deco img { display:block; width:100%; height:auto; }
@@ -316,18 +323,27 @@ html, body {
 /* ================================================================
    RESPONSIVE
 ================================================================ */
+
+/* 55" portrait (>= 1400px alto) */
 @media (min-height:1400px) {
-  .wheel-wrap { left:-8%; width:clamp(700px,82vmin,1100px); }
-  .tap-hint   { font-size:clamp(1rem,2vh,1.6rem); }
-  .q-deco     { width:clamp(220px,38vw,500px); }
+  .tap-hint { font-size:clamp(1rem,2vh,1.5rem); right:4%; }
 }
+
+/* Desktop landscape */
 @media (orientation:landscape) and (min-width:900px) {
   .wheel-wrap { left:3%; }
   .q-answers  { display:grid; grid-template-columns:1fr 1fr; }
+  .tap-hint   { right:3%; top:55%; }
 }
-@media (max-width:380px) {
-  .wheel-wrap { left:-22%; width:115vw; }
-  .q-content  { padding:8% 6% 22% 6%; }
+
+/* Móvil pequeño: evitar desbordamiento derecho */
+@media (max-width:500px) {
+  .wheel-wrap {
+    width: min(65.4vh, 108vw);
+    left: -20%;
+  }
+  .q-content { padding:8% 6% 24% 6%; }
+  .q-deco    { width: clamp(130px, 42vw, 260px); }
 }
 
 </style>
@@ -336,12 +352,12 @@ html, body {
 
 <div id="app">
 
-<!-- ══════════════════════════════════════
+<!-- ════════════════════════════════════
      PANTALLA 1 · RULETA
-══════════════════════════════════════ -->
+════════════════════════════════════ -->
 <div id="scr-wheel" class="screen">
 
-  <!-- Logo centrado arriba -->
+  <!-- Logo centrado arriba (ancho = 36.4vh → 699px en 55") -->
   <div class="logo-wrap">
     <img src="logo_titulo.png" alt="Boehringer Ingelheim">
   </div>
@@ -349,44 +365,48 @@ html, body {
   <!-- Ensamble ruleta -->
   <div class="wheel-wrap" id="wheelWrap">
 
-    <!-- CAPA 1 · GIRA · ruleta.png (10 segmentos + números) -->
+    <!-- CAPA 1 · GIRA: ruleta.png con los 10 segmentos -->
     <img id="wheel-spin"
          src="ruleta.png"
          alt="" draggable="false">
 
-    <!-- CAPA 2 · FIJA · contorno exterior verde -->
+    <!-- CAPA 2 · FIJA encima: contorno verde exterior -->
     <img class="wheel-contorno"
          src="contorno_ruleta.png"
          alt="" draggable="false">
 
-    <!-- CAPA 3 · FIJA · centro decorativo (pequeño, centrado) -->
+    <!-- CAPA 3 · FIJA encima: centro decorativo BI (25% del diámetro) -->
     <img class="wheel-centro"
          src="centro_ruleta.png"
          alt="" draggable="false">
 
-    <!-- PUNTERO -->
+    <!-- PUNTERO: 16.56% del ancho del wrapper → 208px en 55" -->
     <img class="wheel-pointer"
          src="puntero.svg"
          alt="" draggable="false">
 
-  </div>
+  </div><!-- /wheel-wrap -->
 
   <div class="tap-hint" id="tapHint">Toca la ruleta<br>para girar</div>
 
-  <!-- Perro: video encima, piso debajo -->
+  <!-- Dog video: alto = 30.1vh → 578px en 55", encima del piso -->
   <div class="dog-wrap">
     <video autoplay loop muted playsinline>
       <source src="video_perro.mp4" type="video/mp4">
     </video>
-    <img class="dog-floor" src="piso_para_video.png" alt="" draggable="false">
   </div>
 
-</div>
+  <!-- Piso: fuera del dog-wrap para que ocupe 100% ancho de pantalla -->
+  <img class="dog-floor"
+       src="piso_para_video.png"
+       alt="" draggable="false">
+
+</div><!-- /scr-wheel -->
 
 
-<!-- ══════════════════════════════════════
+<!-- ════════════════════════════════════
      PANTALLA 2 · PREGUNTAS
-══════════════════════════════════════ -->
+════════════════════════════════════ -->
 <div id="scr-question" class="screen">
 
   <div class="q-content">
@@ -404,12 +424,12 @@ html, body {
 
   </div>
 
-  <!-- Imagen decorativa (abajo derecha, doble de grande) -->
+  <!-- Imagen decorativa abajo derecha (doble de tamaño) -->
   <div class="q-deco">
     <img id="q-deco-img" src="imagen_decorativa_preguntas-05.png" alt="">
   </div>
 
-  <!-- Volver (abajo izquierda) -->
+  <!-- Volver abajo izquierda -->
   <button class="btn-volver" id="btn-volver" onclick="volverRuleta()">
     <svg viewBox="0 0 16 16" fill="currentColor">
       <path d="M3.86 8.75l4.72 4.72a.75.75 0 1 1-1.06 1.06L1.97 8.97a.75.75 0 0 1 0-1.06l5.55-5.56a.75.75 0 0 1 1.06 1.06L3.86 7.25H14a.75.75 0 0 1 0 1.5H3.86z"/>
@@ -417,9 +437,9 @@ html, body {
     Volver al juego
   </button>
 
-</div>
+</div><!-- /scr-question -->
 
-</div>
+</div><!-- /app -->
 
 <script>
 'use strict';
@@ -457,7 +477,6 @@ const QUESTIONS = [
     correct:0 }
 ];
 
-/* Imagen decorativa por pregunta (cicla entre las 5) */
 const DECO_IMGS = [
   'imagen_decorativa_preguntas-05.png',
   'imagen_decorativa_preguntas-06.png',
@@ -484,7 +503,7 @@ function handleWheelClick() {
 }
 
 function doSpin(seg) {
-  const el = document.getElementById('wheel-spin');
+  const el         = document.getElementById('wheel-spin');
   const segCenter  = (seg - 1) * DEG_SEG;
   const alignAngle = ((PTR_DEG - segCenter) % 360 + 360) % 360;
   const curMod     = totalDeg % 360;
@@ -503,7 +522,6 @@ function doSpin(seg) {
 
 function showQuestion(num) {
   const data = QUESTIONS[num - 1];
-
   document.getElementById('q-num').textContent  = num;
   document.getElementById('q-text').textContent = data.q;
   document.getElementById('q-deco-img').src      = DECO_IMGS[(num - 1) % 5];
@@ -544,7 +562,6 @@ function onAnswer(clickedBtn, selected, correct) {
     allBtns[correct].querySelector('.ans-icon').textContent = '✓';
     setResult(false);
   }
-
   document.getElementById('btn-volver').classList.add('show');
 }
 
