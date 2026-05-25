@@ -16,7 +16,7 @@
   --correct: #b9efce;
   --wrong:   #f6ceb9;
   --font:    'DM Sans', system-ui, sans-serif;
-  --font-d:  'DM Serif Display', Georgia, serif;
+  /* --font-d ya no se usa, todo es sans-serif */
   --slide-t: 0.65s;
 }
 
@@ -82,9 +82,20 @@ html, body {
 .wheel-wrap {
   position:absolute;
   top: 50%;
-  left: -25%;
+
+  /* ← MOVER IZQUIERDA/DERECHA:
+     Número más negativo = más a la izquierda (ej: -40% = más oculta)
+     Número menos negativo = más a la derecha (ej: -10% = más visible) */
+  left: -30%;
+
   transform: translateY(-50%);
-  width: clamp(260px, 52vh, 1000px);
+
+  /* ← TAMAÑO DE LA RULETA:
+     Segundo valor (65.4vh → 70vh) = tamaño en pantallas medianas/grandes
+     Tercer valor = tamaño máximo absoluto en px
+     Sube el vh para hacerla más grande, bájalo para hacerla más pequeña */
+  width: clamp(300px, 70vh, 1350px);
+
   aspect-ratio: 1 / 1;
   cursor:pointer;
   user-select:none; -webkit-user-select:none;
@@ -143,14 +154,23 @@ html, body {
 }
 @keyframes breathe { 0%,100%{opacity:.4;} 50%{opacity:.9;} }
 
-/* ── Dog video ──
-   Referencia 55": 577.58px de alto en pantalla 1920px → 30.1vh
-   Posicionado abajo a la derecha, ENCIMA del piso
-*/
+/* ── Dog video ── */
 .dog-wrap {
   position:absolute;
-  bottom:8%; right:3%;
-  height: clamp(120px, 30.1vh, 580px);
+
+  /* ← SUBIR/BAJAR EL PERRO:
+     Número más grande = sube más (ej: 15% = más arriba)
+     Número más pequeño = baja (ej: 2% = casi en el piso)
+     En móvil y en 55" usa este mismo valor */
+  bottom: 12%;
+
+  right:3%;
+
+  /* ← ALTO DEL VIDEO DEL PERRO:
+     Segundo valor (30.1vh) = altura en pantallas medianas
+     Súbelo para hacerlo más grande, bájalo para hacerlo más pequeño */
+  height: clamp(120px, 32vh, 620px);
+
   pointer-events:none; z-index:5;
 }
 .dog-wrap video {
@@ -220,27 +240,44 @@ html, body {
   font-size:clamp(0.7rem,1.6vh,1rem); font-weight:600;
 }
 
-/* Texto */
+/* Texto pregunta — sin serifa, más grande */
 .q-text {
   color:var(--white);
-  font-size:clamp(1.1rem,3vh,2.3rem); font-weight:700;
-  line-height:1.45; font-family:var(--font-d);
+  /* ← TAMAÑO DEL TEXTO DE LA PREGUNTA:
+     Segundo valor = tamaño en pantallas medianas (sube para más grande)
+     Tercer valor  = tamaño máximo */
+  font-size:clamp(1.2rem, 3.5vh, 2.6rem);
+  font-weight:700;
+  line-height:1.5;
+  font-family: var(--font); /* sin serifa */
 }
 
-/* Opciones */
+/* Opciones — más separadas */
 .q-answers {
   display:flex; flex-direction:column;
-  gap:clamp(8px,1.5vh,18px);
+  /* ← ESPACIO ENTRE BOTONES DE RESPUESTA:
+     Súbelo para más separación (ej: 3vh = bastante espacio)
+     Bájalo para juntarlos más (ej: 1vh = compacto) */
+  gap:clamp(12px, 2.2vh, 26px);
 }
 
 .ans-btn {
   background:rgba(255,255,255,0.95);
   border:3px solid transparent; border-radius:999px;
-  padding:clamp(12px,2.2vh,26px) clamp(18px,3vw,40px);
-  font-size:clamp(0.9rem,2.3vh,1.65rem);
+
+  /* ← PADDING INTERNO DEL BOTÓN (espacio dentro de la pastilla):
+     Primer clamp = alto (arriba/abajo)
+     Segundo clamp = ancho (izquierda/derecha) */
+  padding:clamp(14px, 2.6vh, 32px) clamp(20px, 3vw, 44px);
+
+  /* ← TAMAÑO DE LETRA EN LOS BOTONES:
+     Segundo valor = tamaño en pantallas medianas
+     Súbelo para letras más grandes */
+  font-size:clamp(1rem, 2.6vh, 1.9rem);
+
   font-weight:500; font-family:var(--font); color:#0d2a24;
   cursor:pointer; text-align:left;
-  display:flex; align-items:center; gap:14px; line-height:1.35;
+  display:flex; align-items:center; gap:14px; line-height:1.4;
   transition:background .3s, border-color .3s, transform .2s, color .3s, box-shadow .3s;
   box-shadow:0 2px 12px rgba(0,0,0,0.15);
   -webkit-tap-highlight-color:transparent;
@@ -296,7 +333,7 @@ html, body {
    Referencia: doble de clamp(80px,17vw,200px)
 */
 .q-deco {
-  position:absolute; bottom:5%; right:1%;
+  position:absolute; bottom:0; right:1%;
   width: clamp(160px, 34vw, 400px);
   pointer-events:none; z-index:0;
 }
