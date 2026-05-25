@@ -9,7 +9,7 @@
 <style>
 
 :root {
-  --bg:      #0d302a;
+  --bg:      #0B2B28;
   --green:   #58b46e;
   --gdk:     #3dbf6a;
   --white:   #ffffff;
@@ -61,7 +61,7 @@ html, body {
 */
 .logo-wrap {
   position:absolute;
-  top: 3.5%;
+  top: 10%;
   left: 50%;
   transform: translateX(-50%);
   z-index:20;
@@ -88,13 +88,13 @@ html, body {
      Número menos negativo = más a la derecha (ej: -10% = más visible) */
   left: -50%;
 
-  transform: translateY(-50%);
+  transform: translateY(-40%);
 
   /* ← TAMAÑO DE LA RULETA:
      Segundo valor (65.4vh → 70vh) = tamaño en pantallas medianas/grandes
      Tercer valor = tamaño máximo absoluto en px
      Sube el vh para hacerla más grande, bájalo para hacerla más pequeña */
-  width: clamp(300px, 60vh, 1350px);
+  width: clamp(300px, 65.5vh, 1350px);
 
   aspect-ratio: 1 / 1;
   cursor:pointer;
@@ -169,7 +169,7 @@ html, body {
   /* ← ALTO DEL VIDEO DEL PERRO:
      Segundo valor (30.1vh) = altura en pantallas medianas
      Súbelo para hacerlo más grande, bájalo para hacerlo más pequeño */
-  height: clamp(120px, 35vh, 620px);
+  height: clamp(120px, 45vh, 620px);
 
   pointer-events:none; z-index:5;
 }
