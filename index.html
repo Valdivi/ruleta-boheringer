@@ -173,10 +173,18 @@ html, body {
 
   pointer-events:none; z-index:5;
 }
-.dog-wrap video {
-  height:100%; width:auto;
-  display:block;
-  mix-blend-mode: screen; /* ← esto fusiona el video con el fondo */
+.dog-wrap {
+  position:absolute;
+  bottom: 10.5%;
+  right:4%;
+  height: clamp(120px, 80vh, 620px);
+  pointer-events:none; z-index:5;
+
+  /* ← ESTO desvanece los bordes del video hacia el fondo */
+  -webkit-mask-image: radial-gradient(ellipse 85% 85% at 50% 55%,
+    black 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 85% 85% at 50% 55%,
+    black 55%, transparent 100%);
 }
 
 /* ── Piso ──
