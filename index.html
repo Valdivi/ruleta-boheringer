@@ -86,7 +86,7 @@ html, body {
   /* ← MOVER IZQUIERDA/DERECHA:
      Número más negativo = más a la izquierda (ej: -40% = más oculta)
      Número menos negativo = más a la derecha (ej: -10% = más visible) */
-  left: -30%;
+  left: -50%;
 
   transform: translateY(-50%);
 
@@ -162,14 +162,14 @@ html, body {
      Número más grande = sube más (ej: 15% = más arriba)
      Número más pequeño = baja (ej: 2% = casi en el piso)
      En móvil y en 55" usa este mismo valor */
-  bottom: 12%;
+  bottom: 11%;
 
   right:3%;
 
   /* ← ALTO DEL VIDEO DEL PERRO:
      Segundo valor (30.1vh) = altura en pantallas medianas
      Súbelo para hacerlo más grande, bájalo para hacerlo más pequeño */
-  height: clamp(120px, 32vh, 620px);
+  height: clamp(120px, 35vh, 620px);
 
   pointer-events:none; z-index:5;
 }
@@ -246,7 +246,7 @@ html, body {
   /* ← TAMAÑO DEL TEXTO DE LA PREGUNTA:
      Segundo valor = tamaño en pantallas medianas (sube para más grande)
      Tercer valor  = tamaño máximo */
-  font-size:clamp(1.2rem, 3.5vh, 2.6rem);
+  font-size:clamp(1.2rem, 4.5vh, 2.6rem);
   font-weight:700;
   line-height:1.5;
   font-family: var(--font); /* sin serifa */
@@ -258,7 +258,7 @@ html, body {
   /* ← ESPACIO ENTRE BOTONES DE RESPUESTA:
      Súbelo para más separación (ej: 3vh = bastante espacio)
      Bájalo para juntarlos más (ej: 1vh = compacto) */
-  gap:clamp(12px, 2.2vh, 26px);
+  gap:clamp(12px, 3vh, 26px);
 }
 
 .ans-btn {
