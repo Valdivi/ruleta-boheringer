@@ -287,18 +287,48 @@ html, body {
 
 /* Móvil portrait — igual que 55" pero proporcional */
 @media (max-width:600px) and (orientation:portrait) {
-  /* Ruleta más pequeña en móvil */
-  .wheel-wrap { width: clamp(200px, 52vh, 500px); left:-35%; }
-  /* Logo más pequeño */
-  .logo-wrap img { width: clamp(100px, 26vh, 240px); }
-  /* Perro más pequeño y abajo */
-  .dog-wrap { height: clamp(70px, 18vh, 200px); bottom:0%; }
-  /* FIX NEGRO EN SAFARI/iOS: blend mode como fallback */
-  .dog-wrap video { mix-blend-mode: screen; }
-  /* Letras más pequeñas */
-  .q-text { font-size: clamp(0.9rem, 2.8vh, 1.6rem); }
-  .ans-btn { font-size: clamp(0.8rem, 1.8vh, 1.2rem);
-             padding: clamp(8px, 1.5vh, 18px) clamp(12px, 2vw, 24px); }
+
+/* ── RULETA: más visible, menos oculta a la izquierda ──
+   sube el vh para más grande, left menos negativo = más visible */
+.wheel-wrap {
+  width: clamp(280px, 75vw, 520px);
+  left: -22%;
+  top: 48%;
+}
+
+/* ── LOGO: más pequeño ── */
+.logo-wrap img { width: clamp(100px, 40vw, 200px); }
+
+/* ── TAP HINT: más arriba para que no quede tapado ── */
+.tap-hint { top: 38%; right: 3%; font-size: 0.75rem; }
+
+/* ── PERRO: más grande y visible ──
+   sube el vh para agrandar */
+.dog-wrap {
+  height: clamp(160px, 28vh, 280px);
+  bottom: 0%;
+  right: 0%;
+}
+/* fix negro iOS */
+.dog-wrap video { mix-blend-mode: screen; }
+
+/* ── PREGUNTAS: letras más pequeñas ── */
+.q-text { font-size: clamp(0.95rem, 2.5vw, 1.4rem); }
+
+/* ── BOTONES: menos separados y más pequeños ──
+   baja el gap para menos separación */
+.q-answers { gap: clamp(6px, 1.2vh, 14px); }
+.ans-btn {
+  font-size: clamp(0.8rem, 1.8vw, 1.1rem);
+  padding: clamp(8px, 1.2vh, 14px) clamp(12px, 2vw, 22px);
+}
+
+/* ── ADORNO: pegado abajo a la derecha ── */
+.q-deco {
+  width: clamp(100px, 35vw, 180px);
+  bottom: 0%;
+  right: 0%;
+}
 }
 
 /* Tablet portrait — igual que 55" proporcional */
@@ -309,24 +339,35 @@ html, body {
     transform: translateY(-40%);
     width: clamp(320px, 64vh, 950px);
   }
-  .dog-wrap { height: clamp(110px, 28vh, 480px); bottom:8%; }
+  .dog-wrap { height: clamp(110px, 28vh, 480px); bottom:0%; }
+  /* fix negro iOS tablet */
+  .dog-wrap video { mix-blend-mode: screen; }
   .q-deco   { width: clamp(140px, 35vw, 320px); }
 }
 
 /* Desktop landscape — ruleta centrada, perro más pequeño */
 @media (orientation:landscape) and (min-width:900px) {
-  .wheel-wrap { width: clamp(260px, 58vh, 720px); }
-  /* Piso a mitad de altura */
-  .dog-floor  { height: 12vh; object-fit:cover; object-position: top; }
-  /* Perro reposicionado */
-  .dog-wrap   { height: clamp(80px, 18vh, 220px); bottom:5%; right:2%; }
+  .wheel-wrap {
+    /* ← TAMAÑO RULETA DESKTOP: baja el vh para más pequeña */
+    width: clamp(260px, 52vh, 680px);
+    /* Ruleta centrada */
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+  }
+  /* ← ALTURA DEL PISO EN DESKTOP: sube/baja el vh */
+  .dog-floor { height: 8vh; object-fit:cover; object-position:top; }
+  /* ← PERRO EN DESKTOP: ajusta bottom para subir/bajar */
+  .dog-wrap  { height: clamp(80px, 16vh, 200px); bottom:8%; right:2%; }
+  .q-answers { display:grid; grid-template-columns:1fr 1fr; }
+  .q-deco    { width: clamp(100px, 18vw, 220px); bottom:0%; right:1%; }
 }
 
 /* 55" portrait */
 @media (min-height:1400px) {
   .tap-hint { font-size:clamp(1rem,2vh,1.6rem); }
   /* ← TAMAÑO PERRO EN 55": sube el vh para más grande */
-  .dog-wrap { height: clamp(400px, 38vh, 730px); }
+  .dog-wrap { height: clamp(400px, 38vh, 730px); bottom:0%; }
 }
 
 </style>
