@@ -533,7 +533,7 @@ const QUESTIONS=[
   {q:'¿Qué parásitos internos ayuda a controlar NexGard Spectra?',opts:['Ascaridios, ancilostómidos y tricúridos','Solo tenias','Solo protozoarios','Ningún parásito intestinal'],correct:0}
 ];
 const DECO_IMGS=['imagen_decorativa_preguntas-05.png','imagen_decorativa_preguntas-06.png','imagen_decorativa_preguntas-07.png','imagen_decorativa_preguntas-08.png','imagen_decorativa_preguntas-09.png'];
-const N_SEG=10,DEG_SEG=36,PTR_DEG=90,SPIN_MS=4500,PAUSE_MS=1500;
+const N_SEG=10,DEG_SEG=36,PTR_DEG=90,SPIN_MS=4500,PAUSE_MS=1250;
 let spinning=false,totalDeg=0;
 function handleWheelClick(){if(spinning)return;spinning=true;document.getElementById('tapHint').style.opacity='0';doSpin(Math.floor(Math.random()*N_SEG)+1);}
 function doSpin(seg){const el=document.getElementById('wheel-spin');const segCenter=(seg-1)*DEG_SEG;const alignAngle=((PTR_DEG-segCenter)%360+360)%360;const curMod=totalDeg%360;let delta=(alignAngle-curMod+360)%360;if(delta<10)delta+=360;const newTotal=totalDeg+5*360+delta;el.style.transition=`transform ${SPIN_MS}ms cubic-bezier(0.08,0.92,0.18,1)`;el.style.transform=`rotate(${newTotal}deg)`;totalDeg=newTotal;setTimeout(()=>{setTimeout(()=>showQuestion(seg),PAUSE_MS);},SPIN_MS);}
