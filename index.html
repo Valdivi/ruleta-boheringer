@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Boehringer Ingelheim — Ruleta Quiz</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=DM+Serif+Display&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 
 :root {
@@ -16,7 +16,6 @@
   --correct: #b9efce;
   --wrong:   #f6ceb9;
   --font:    'DM Sans', system-ui, sans-serif;
-  /* --font-d ya no se usa, todo es sans-serif */
   --slide-t: 0.65s;
 }
 
@@ -46,6 +45,8 @@ html, body {
 
 /* ================================================================
    PANTALLA 1 — RULETA
+   BASE: diseño para 55" portrait (1080×1920)
+   Se escala proporcionalmente a móvil y tablet
 ================================================================ */
 #scr-wheel { background:var(--bg); overflow:hidden; }
 
@@ -57,7 +58,8 @@ html, body {
 }
 
 /* ── Logo ──
-   Referencia 55": 699px de ancho en pantalla 1920px de alto → 36.4vh
+   55": ancho 699px / alto 1920px = 36.4vh
+   Centrado arriba
 */
 .logo-wrap {
   position:absolute;
@@ -65,53 +67,47 @@ html, body {
   left: 50%;
   transform: translateX(-50%);
   z-index:20;
-  display:flex;
-  align-items:center;
-  justify-content:center;
 }
 .logo-wrap img {
-  width: clamp(160px, 36.4vh, 700px);
+  /* ← ANCHO DEL LOGO: sube vh para más grande */
+  width: clamp(140px, 36.4vh, 700px);
   height: auto;
   display:block;
 }
 
 /* ── Wheel wrapper ──
-   Referencia 55": 1255.44px en pantalla 1920px de alto → 65.4vh
-   Offset izquierdo: -25% del viewport (parte de la ruleta sale por la izquierda)
+   55": 1255px / 1920px alto = 65.4vh
+   Sale por la izquierda mostrando ~70% de la ruleta
 */
 .wheel-wrap {
   position:absolute;
-  top: 45%;
 
-  /* ← MOVER IZQUIERDA/DERECHA:
-     Número más negativo = más a la izquierda (ej: -40% = más oculta)
-     Número menos negativo = más a la derecha (ej: -10% = más visible) */
-  left: -45%;
+  /* ← POSICIÓN VERTICAL: baja el % para subir la ruleta */
+  top: 50%;
 
-  transform: translateY(-40%);
+  /* ← POSICIÓN HORIZONTAL:
+     más negativo = más a la izquierda (más oculta)
+     menos negativo = más a la derecha (más visible) */
+  left: -28%;
 
-  /* ← TAMAÑO DE LA RULETA:
-     Segundo valor (65.4vh → 70vh) = tamaño en pantallas medianas/grandes
-     Tercer valor = tamaño máximo absoluto en px
-     Sube el vh para hacerla más grande, bájalo para hacerla más pequeña */
-  width: clamp(300px, 64vh, 1350px);
+  transform: translateY(-50%);
 
-  aspect-ratio: 1 / 1;
+  /* ← TAMAÑO: sube el vh para más grande */
+  width: clamp(280px, 65vh, 1260px);
+
+  aspect-ratio: 1/1;
   cursor:pointer;
   user-select:none; -webkit-user-select:none;
   z-index:10;
 }
 
-/* Capa giratoria ruleta.png */
 #wheel-spin {
   position:absolute; top:0; left:0;
   width:100%; height:100%;
   display:block; object-fit:contain;
   transform-origin:50% 50%;
-  /* transition inyectada por JS */
 }
 
-/* Contorno verde (fijo, mismo tamaño que wrapper) */
 .wheel-contorno {
   position:absolute; top:0; left:0;
   width:100%; height:100%;
@@ -119,24 +115,22 @@ html, body {
   pointer-events:none; z-index:3;
 }
 
-/* Centro decorativo (pequeño, centrado, fijo) */
 .wheel-centro {
   position:absolute;
   top:50%; left:50%;
   transform:translate(-50%,-50%);
+  /* ← TAMAÑO DEL CENTRO: % del diámetro de la ruleta */
   width:20%; height:20%;
   display:block; object-fit:contain;
   pointer-events:none; z-index:4;
 }
 
-/* Puntero
-   Referencia 55": 207.9172px sobre rueda de 1255.44px → 16.56% del wrapper
-*/
 .wheel-pointer {
   position:absolute;
-  right: -8%;
-  top:50%; transform:translateY(-50%);
-  width: 16.56%;
+  right:-8%; top:50%;
+  transform:translateY(-50%);
+  /* ← ANCHO DEL PUNTERO: 208px/1255px = 16.56% */
+  width:16.56%;
   pointer-events:none; z-index:15;
   filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3));
 }
@@ -147,61 +141,55 @@ html, body {
   top:50%; right:5%;
   transform:translateY(-50%);
   color:rgba(255,255,255,0.5);
-  font-size:clamp(0.8rem,1.8vh,1.3rem); font-weight:500;
+  font-size:clamp(0.75rem,1.8vh,1.3rem); font-weight:500;
   pointer-events:none; text-align:center; line-height:1.7;
   transition:opacity 0.5s;
   animation:breathe 2.5s ease-in-out infinite;
 }
 @keyframes breathe { 0%,100%{opacity:.4;} 50%{opacity:.9;} }
 
-/* ── Dog video ── */
+/* ── Dog video ──
+   55": 578px alto / 1920px = 30.1vh
+   webm con fondo transparente (ping-pong)
+*/
 .dog-wrap {
   position:absolute;
+  bottom: 0%;   /* ← SUBIR PERRO: aumenta este % */
+  right: 1%;
 
-  /* ← SUBIR/BAJAR EL PERRO:
-     Número más grande = sube más (ej: 15% = más arriba)
-     Número más pequeño = baja (ej: 2% = casi en el piso)
-     En móvil y en 55" usa este mismo valor */
-  bottom: 10.1%;
-
-  right:0%;
-
-  /* ← ALTO DEL VIDEO DEL PERRO:
-     Segundo valor (30.1vh) = altura en pantallas medianas
-     Súbelo para hacerlo más grande, bájalo para hacerlo más pequeño */
-  height: clamp(120px, 80vh, 620px);
+  /* ← ALTURA DEL PERRO: sube vh para más grande */
+  height: clamp(100px, 30vh, 580px);
 
   pointer-events:none; z-index:5;
+
+  /* Desvanece bordes por si acaso */
+  -webkit-mask-image: radial-gradient(ellipse 88% 90% at 50% 60%,
+    black 55%, transparent 100%);
+  mask-image: radial-gradient(ellipse 88% 90% at 50% 60%,
+    black 55%, transparent 100%);
 }
 .dog-wrap video {
   height:100%; width:auto;
   display:block;
-  mix-blend-mode: screen; /* ← esto fusiona el video con el fondo */
+  mix-blend-mode: screen;
 }
 
-/* ── Piso ──
-   Ocupa TODO el ancho de la pantalla (cualquier dispositivo).
-   Diseñado para 1080px de ancho, se estira proporcionalmente.
-   Detrás del perro (z-index menor).
-*/
+/* ── Piso: 100% ancho de pantalla ── */
 .dog-floor {
   position:absolute;
   bottom:0; left:0;
-  width:100%;
-  height:auto;
+  width:100%; height:auto;
   display:block;
   pointer-events:none; z-index:4;
 }
 
 /* ================================================================
    PANTALLA 2 — PREGUNTAS
-   Degradado: OSCURO izquierda → CLARO derecha
-   Verde oscuro domina 60%, transición suave
 ================================================================ */
 #scr-question {
   background: linear-gradient(to right,
-    #0d302a  0%,
-    #0d302a 36%,
+    #0A2825  0%,
+    #0A2825 36%,
     #163d34 53%,
     #266348 68%,
     #3d9460 83%,
@@ -221,61 +209,44 @@ html, body {
   position:relative; min-height:100%;
   display:flex; flex-direction:column; justify-content:center;
   padding: 7% 9% 22% 9%;
-  gap: clamp(12px, 2.2vh, 30px);
+  gap: clamp(10px, 2vh, 28px);
   z-index:1;
 }
 
-/* Badge */
 .q-badge { display:flex; align-items:center; gap:14px; }
 .q-num-circle {
-  width:clamp(44px,7vh,82px); height:clamp(44px,7vh,82px);
+  width:clamp(42px,6.5vh,80px); height:clamp(42px,6.5vh,80px);
   background:var(--green); border-radius:50%;
   display:flex; align-items:center; justify-content:center;
-  font-size:clamp(1.1rem,3.5vh,2.2rem); font-weight:800; color:white;
+  font-size:clamp(1rem,3.2vh,2rem); font-weight:800; color:white;
   flex-shrink:0;
   box-shadow:0 0 0 4px rgba(88,180,110,0.25);
 }
 .q-label-txt {
   text-transform:uppercase; letter-spacing:3px;
   color:rgba(255,255,255,0.55);
-  font-size:clamp(0.7rem,1.6vh,1rem); font-weight:600;
+  font-size:clamp(0.65rem,1.5vh,1rem); font-weight:600;
 }
 
-/* Texto pregunta — sin serifa, más grande */
 .q-text {
   color:var(--white);
-  /* ← TAMAÑO DEL TEXTO DE LA PREGUNTA:
-     Segundo valor = tamaño en pantallas medianas (sube para más grande)
-     Tercer valor  = tamaño máximo */
-  font-size:clamp(1.2rem, 4.5vh, 2.6rem);
-  font-weight:700;
-  line-height:1.5;
-  font-family: var(--font); /* sin serifa */
+  /* ← TAMAÑO TEXTO PREGUNTA */
+  font-size:clamp(1rem, 3.8vh, 2.4rem);
+  font-weight:700; line-height:1.45;
 }
 
-/* Opciones — más separadas */
 .q-answers {
   display:flex; flex-direction:column;
-  /* ← ESPACIO ENTRE BOTONES DE RESPUESTA:
-     Súbelo para más separación (ej: 3vh = bastante espacio)
-     Bájalo para juntarlos más (ej: 1vh = compacto) */
-  gap:clamp(12px, 3vh, 26px);
+  /* ← ESPACIO ENTRE BOTONES */
+  gap:clamp(10px, 2.2vh, 24px);
 }
 
 .ans-btn {
   background:rgba(255,255,255,0.95);
   border:3px solid transparent; border-radius:999px;
-
-  /* ← PADDING INTERNO DEL BOTÓN (espacio dentro de la pastilla):
-     Primer clamp = alto (arriba/abajo)
-     Segundo clamp = ancho (izquierda/derecha) */
-  padding:clamp(14px, 2.6vh, 32px) clamp(20px, 3vw, 44px);
-
-  /* ← TAMAÑO DE LETRA EN LOS BOTONES:
-     Segundo valor = tamaño en pantallas medianas
-     Súbelo para letras más grandes */
-  font-size:clamp(1rem, 2.6vh, 1.9rem);
-
+  /* ← PADDING Y TAMAÑO DE LETRA DE BOTONES */
+  padding:clamp(12px, 2.4vh, 30px) clamp(18px, 3vw, 44px);
+  font-size:clamp(0.9rem, 2.4vh, 1.8rem);
   font-weight:500; font-family:var(--font); color:#0d2a24;
   cursor:pointer; text-align:left;
   display:flex; align-items:center; gap:14px; line-height:1.4;
@@ -295,20 +266,14 @@ html, body {
   min-width:1.5em; text-align:center; flex-shrink:0;
 }
 
-/* ✅ Correcta */
 .ans-btn.is-correct {
-  background: #b9efce; color:#0a2b1e; border-color:#b9efce;
+  background:#b9efce; color:#0a2b1e; border-color:#b9efce;
   transform:none; box-shadow:0 4px 24px rgba(185,239,206,0.5);
 }
 .ans-btn.is-correct .ans-icon { animation:pop .4s ease; }
-
-/* ❌ Incorrecta */
 .ans-btn.is-wrong {
-  background: #f6ceb9; color:#4a1a08; border-color:#f6ceb9;
-  transform:none;
+  background:#f6ceb9; color:#4a1a08; border-color:#f6ceb9; transform:none;
 }
-
-/* Muestra la correcta en verde */
 .ans-btn.show-correct {
   background:#b9efce; color:#0a2b1e; border-color:#b9efce;
   animation:reveal .5s ease;
@@ -318,11 +283,10 @@ html, body {
 @keyframes pop    { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
 @keyframes reveal { 0%{transform:translateX(0)} 25%{transform:translateX(-6px)} 50%{transform:translateX(6px)} 100%{transform:translateX(0)} }
 
-/* Resultado */
 .q-result {
   border-radius:16px;
   padding:clamp(10px,1.8vh,20px) clamp(16px,2.5vw,30px);
-  font-size:clamp(0.9rem,2vh,1.5rem); font-weight:700;
+  font-size:clamp(0.85rem,1.8vh,1.4rem); font-weight:700;
   display:none;
   animation:fadeUp .45s cubic-bezier(0.175,0.885,0.32,1.275);
 }
@@ -330,14 +294,13 @@ html, body {
 .q-result.wrong   { display:block; background:rgba(246,206,185,0.2); color:#f6ceb9; border:2px solid rgba(246,206,185,0.35); }
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px) scale(.96)} to{opacity:1;transform:translateY(0) scale(1)} }
 
-/* Imagen decorativa — doble de grande
-   Referencia: doble de clamp(80px,17vw,200px)
-*/
-/* adorno de perritos seccion preguntas */
-
+/* Adorno esquina derecha */
 .q-deco {
-  position:absolute; bottom:10%; right:12%;
-  width: clamp(160px, 50vw, 400px);
+  position:absolute;
+  /* ← POSICIÓN ADORNO: bottom sube, right aleja del borde */
+  bottom:0%; right:1%;
+  /* ← TAMAÑO ADORNO: sube vw para más grande */
+  width: clamp(140px, 32vw, 380px);
   pointer-events:none; z-index:0;
 }
 .q-deco img { display:block; width:100%; height:auto; }
@@ -349,7 +312,7 @@ html, body {
   border:2px solid rgba(255,255,255,0.4); color:white;
   padding:clamp(10px,1.8vh,20px) clamp(22px,3vw,44px);
   border-radius:999px;
-  font-size:clamp(0.85rem,1.8vh,1.25rem); font-family:var(--font); font-weight:600;
+  font-size:clamp(0.8rem,1.8vh,1.2rem); font-family:var(--font); font-weight:600;
   cursor:pointer; letter-spacing:0.5px;
   opacity:0; pointer-events:none;
   transition:opacity .4s, background .25s, border-color .25s, transform .2s;
@@ -364,26 +327,71 @@ html, body {
    RESPONSIVE
 ================================================================ */
 
-/* 55" portrait (>= 1400px alto) */
-@media (min-height:1400px) {
-  .tap-hint { font-size:clamp(1rem,2vh,1.5rem); right:4%; }
-}
-
-/* Desktop landscape */
-@media (orientation:landscape) and (min-width:900px) {
-  .wheel-wrap { left:3%; }
-  .q-answers  { display:grid; grid-template-columns:1fr 1fr; }
-  .tap-hint   { right:3%; top:55%; }
-}
-
-/* Móvil pequeño: evitar desbordamiento derecho */
-@media (max-width:500px) {
+/* ── MÓVIL portrait (< 600px ancho) ──
+   Igual que 55" pero proporcional al alto del celular
+*/
+@media (max-width: 600px) {
+  /* Ruleta: ocupa ~65vh igual que el 55", sale por la izquierda */
   .wheel-wrap {
-    width: min(65.4vh, 108vw);
-    left: -20%;
+    width: clamp(260px, 65vh, 700px);
+    left: -28%;
+    top: 50%;
+    transform: translateY(-50%);
   }
-  .q-content { padding:8% 6% 24% 6%; }
-  .q-deco    { width: clamp(130px, 42vw, 260px); }
+  /* Logo proporcional */
+  .logo-wrap img { width: clamp(120px, 36vh, 300px); }
+  /* Perro proporcional */
+  .dog-wrap { height: clamp(90px, 28vh, 300px); }
+  /* Preguntas: padding más ajustado */
+  .q-content { padding: 8% 6% 26% 6%; }
+  /* Adorno más pequeño en móvil */
+  .q-deco { width: clamp(110px, 38vw, 220px); }
+  /* Botones en columna en móvil */
+  .q-answers { grid-template-columns: 1fr !important; }
+}
+
+/* ── TABLET portrait (600px – 900px) ──
+   Igual que 55", proporcional
+*/
+@media (min-width: 601px) and (max-width: 900px) {
+  .wheel-wrap {
+    width: clamp(320px, 65vh, 900px);
+    left: -28%;
+  }
+  .logo-wrap img { width: clamp(150px, 36vh, 400px); }
+  .dog-wrap { height: clamp(100px, 29vh, 420px); }
+  .q-content { padding: 7% 8% 24% 8%; }
+  .q-deco { width: clamp(130px, 30vw, 280px); }
+}
+
+/* ── DESKTOP landscape (> 900px ancho, landscape) ──
+   Ruleta centrada, perro más pequeño
+*/
+@media (orientation: landscape) and (min-width: 900px) {
+  /* Ruleta centrada horizontalmente */
+  .wheel-wrap {
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: clamp(300px, 80vh, 900px);
+  }
+  /* Tap hint a la derecha de la ruleta */
+  .tap-hint { right: 4%; top: 50%; }
+  /* Logo más pequeño en desktop */
+  .logo-wrap img { width: clamp(140px, 20vh, 320px); }
+  /* Perro más pequeño */
+  .dog-wrap { height: clamp(80px, 18vh, 240px); right: 2%; }
+  /* Preguntas en grid 2 columnas */
+  .q-answers { display:grid; grid-template-columns:1fr 1fr; }
+  /* Adorno más pequeño */
+  .q-deco { width: clamp(100px, 18vw, 220px); }
+}
+
+/* ── 55" portrait (>= 1400px alto) ── */
+@media (min-height: 1400px) {
+  .wheel-wrap { left: -28%; width: clamp(700px, 65vh, 1260px); }
+  .dog-wrap   { height: clamp(400px, 30vh, 580px); }
+  .tap-hint   { font-size: clamp(1rem, 2vh, 1.6rem); }
 }
 
 </style>
@@ -397,51 +405,30 @@ html, body {
 ════════════════════════════════════ -->
 <div id="scr-wheel" class="screen">
 
-  <!-- Logo centrado arriba (ancho = 36.4vh → 699px en 55") -->
   <div class="logo-wrap">
     <img src="logo_titulo.png" alt="Boehringer Ingelheim">
   </div>
 
-  <!-- Ensamble ruleta -->
   <div class="wheel-wrap" id="wheelWrap">
-
-    <!-- CAPA 1 · GIRA: ruleta.png con los 10 segmentos -->
-    <img id="wheel-spin"
-         src="ruleta.png"
-         alt="" draggable="false">
-
-    <!-- CAPA 2 · FIJA encima: contorno verde exterior -->
-    <img class="wheel-contorno"
-         src="contorno_ruleta.png"
-         alt="" draggable="false">
-
-    <!-- CAPA 3 · FIJA encima: centro decorativo BI (25% del diámetro) -->
-    <img class="wheel-centro"
-         src="centro_ruleta.png"
-         alt="" draggable="false">
-
-    <!-- PUNTERO: 16.56% del ancho del wrapper → 208px en 55" -->
-    <img class="wheel-pointer"
-         src="puntero.svg"
-         alt="" draggable="false">
-
-  </div><!-- /wheel-wrap -->
+    <img id="wheel-spin"      src="ruleta.png"          alt="" draggable="false">
+    <img class="wheel-contorno" src="contorno_ruleta.png" alt="" draggable="false">
+    <img class="wheel-centro"   src="centro_ruleta.png"   alt="" draggable="false">
+    <img class="wheel-pointer"  src="puntero.svg"          alt="" draggable="false">
+  </div>
 
   <div class="tap-hint" id="tapHint">Toca la ruleta<br>para girar</div>
 
-  <!-- Dog video: alto = 30.1vh → 578px en 55", encima del piso -->
+  <!-- Video perro con transparencia (ping-pong) -->
   <div class="dog-wrap">
     <video autoplay loop muted playsinline>
-      <source src="video_perro.mp4" type="video/mp4">
+      <source src="perro_pingpong.webm" type="video/webm">
     </video>
   </div>
 
-  <!-- Piso: fuera del dog-wrap para que ocupe 100% ancho de pantalla -->
-  <img class="dog-floor"
-       src="piso_para_video.png"
-       alt="" draggable="false">
+  <!-- Piso 100% ancho -->
+  <img class="dog-floor" src="piso_para_video.png" alt="" draggable="false">
 
-</div><!-- /scr-wheel -->
+</div>
 
 
 <!-- ════════════════════════════════════
@@ -450,26 +437,19 @@ html, body {
 <div id="scr-question" class="screen">
 
   <div class="q-content">
-
     <div class="q-badge">
       <div class="q-num-circle" id="q-num">1</div>
       <div class="q-label-txt">Pregunta</div>
     </div>
-
     <div class="q-text" id="q-text"></div>
-
     <div class="q-answers" id="q-answers"></div>
-
     <div class="q-result" id="q-result"></div>
-
   </div>
 
-  <!-- Imagen decorativa abajo derecha (doble de tamaño) -->
   <div class="q-deco">
     <img id="q-deco-img" src="imagen_decorativa_preguntas-05.png" alt="">
   </div>
 
-  <!-- Volver abajo izquierda -->
   <button class="btn-volver" id="btn-volver" onclick="volverRuleta()">
     <svg viewBox="0 0 16 16" fill="currentColor">
       <path d="M3.86 8.75l4.72 4.72a.75.75 0 1 1-1.06 1.06L1.97 8.97a.75.75 0 0 1 0-1.06l5.55-5.56a.75.75 0 0 1 1.06 1.06L3.86 7.25H14a.75.75 0 0 1 0 1.5H3.86z"/>
@@ -477,9 +457,9 @@ html, body {
     Volver al juego
   </button>
 
-</div><!-- /scr-question -->
+</div>
 
-</div><!-- /app -->
+</div>
 
 <script>
 'use strict';
@@ -525,110 +505,90 @@ const DECO_IMGS = [
   'imagen_decorativa_preguntas-09.png',
 ];
 
-const N_SEG    = 10;
-const DEG_SEG  = 360 / N_SEG;
-const PTR_DEG  = 90;
-const SPIN_MS  = 4500;
-const PAUSE_MS = 1500;
-
-let spinning = false;
-let totalDeg = 0;
+const N_SEG=10, DEG_SEG=36, PTR_DEG=90, SPIN_MS=4500, PAUSE_MS=1500;
+let spinning=false, totalDeg=0;
 
 function handleWheelClick() {
   if (spinning) return;
   spinning = true;
   document.getElementById('tapHint').style.opacity = '0';
-  const target = Math.floor(Math.random() * N_SEG) + 1;
-  doSpin(target);
+  doSpin(Math.floor(Math.random() * N_SEG) + 1);
 }
 
 function doSpin(seg) {
-  const el         = document.getElementById('wheel-spin');
-  const segCenter  = (seg - 1) * DEG_SEG;
-  const alignAngle = ((PTR_DEG - segCenter) % 360 + 360) % 360;
-  const curMod     = totalDeg % 360;
-  let   delta      = (alignAngle - curMod + 360) % 360;
-  if (delta < 10) delta += 360;
-  const newTotal   = totalDeg + 5 * 360 + delta;
-
+  const el = document.getElementById('wheel-spin');
+  const segCenter  = (seg-1)*DEG_SEG;
+  const alignAngle = ((PTR_DEG-segCenter)%360+360)%360;
+  const curMod     = totalDeg%360;
+  let   delta      = (alignAngle-curMod+360)%360;
+  if (delta<10) delta+=360;
+  const newTotal   = totalDeg+5*360+delta;
   el.style.transition = `transform ${SPIN_MS}ms cubic-bezier(0.08,0.92,0.18,1)`;
   el.style.transform  = `rotate(${newTotal}deg)`;
   totalDeg = newTotal;
-
-  setTimeout(() => {
-    setTimeout(() => showQuestion(seg), PAUSE_MS);
-  }, SPIN_MS);
+  setTimeout(()=>{ setTimeout(()=>showQuestion(seg), PAUSE_MS); }, SPIN_MS);
 }
 
 function showQuestion(num) {
-  const data = QUESTIONS[num - 1];
+  const data = QUESTIONS[num-1];
   document.getElementById('q-num').textContent  = num;
   document.getElementById('q-text').textContent = data.q;
-  document.getElementById('q-deco-img').src      = DECO_IMGS[(num - 1) % 5];
-
+  document.getElementById('q-deco-img').src      = DECO_IMGS[(num-1)%5];
   const resultEl = document.getElementById('q-result');
-  resultEl.className = 'q-result';
-  resultEl.textContent = '';
+  resultEl.className='q-result'; resultEl.textContent='';
   document.getElementById('btn-volver').classList.remove('show');
-
   const answersEl = document.getElementById('q-answers');
-  answersEl.innerHTML = '';
-  data.opts.forEach((text, idx) => {
-    const btn = document.createElement('button');
-    btn.className = 'ans-btn';
-    btn.innerHTML = `<em class="ans-icon"></em><span>${text}</span>`;
-    btn.addEventListener('click', () => onAnswer(btn, idx, data.correct), { once:true });
+  answersEl.innerHTML='';
+  data.opts.forEach((text,idx)=>{
+    const btn=document.createElement('button');
+    btn.className='ans-btn';
+    btn.innerHTML=`<em class="ans-icon"></em><span>${text}</span>`;
+    btn.addEventListener('click',()=>onAnswer(btn,idx,data.correct),{once:true});
     answersEl.appendChild(btn);
   });
-
   document.getElementById('app').classList.add('show-q');
 }
 
-function onAnswer(clickedBtn, selected, correct) {
-  const allBtns = [...document.querySelectorAll('.ans-btn')];
-  allBtns.forEach(b => b.classList.add('disabled'));
-
-  if (selected === correct) {
+function onAnswer(clickedBtn,selected,correct) {
+  const allBtns=[...document.querySelectorAll('.ans-btn')];
+  allBtns.forEach(b=>b.classList.add('disabled'));
+  if (selected===correct) {
     clickedBtn.classList.remove('disabled');
     clickedBtn.classList.add('is-correct');
-    clickedBtn.querySelector('.ans-icon').textContent = '✓';
+    clickedBtn.querySelector('.ans-icon').textContent='✓';
     setResult(true);
   } else {
     clickedBtn.classList.remove('disabled');
     clickedBtn.classList.add('is-wrong');
-    clickedBtn.querySelector('.ans-icon').textContent = '✗';
+    clickedBtn.querySelector('.ans-icon').textContent='✗';
     allBtns[correct].classList.remove('disabled');
     allBtns[correct].classList.add('show-correct');
-    allBtns[correct].querySelector('.ans-icon').textContent = '✓';
+    allBtns[correct].querySelector('.ans-icon').textContent='✓';
     setResult(false);
   }
   document.getElementById('btn-volver').classList.add('show');
 }
 
 function setResult(ok) {
-  const el = document.getElementById('q-result');
-  el.className = ok ? 'q-result correct' : 'q-result wrong';
-  el.innerHTML = ok
-    ? '🎉 ¡Correcto! Excelente respuesta.'
-    : '❌ Incorrecto. La respuesta correcta está marcada en verde.';
+  const el=document.getElementById('q-result');
+  el.className=ok?'q-result correct':'q-result wrong';
+  el.innerHTML=ok?'🎉 ¡Correcto! Excelente respuesta.':'❌ Incorrecto. La respuesta correcta está marcada en verde.';
 }
 
 function volverRuleta() {
   document.getElementById('app').classList.remove('show-q');
-  setTimeout(() => {
-    const el = document.getElementById('wheel-spin');
-    el.style.transition = 'none';
-    el.style.transform  = 'rotate(0deg)';
-    totalDeg  = 0;
-    spinning  = false;
-    document.getElementById('tapHint').style.opacity = '1';
-  }, 350);
+  setTimeout(()=>{
+    const el=document.getElementById('wheel-spin');
+    el.style.transition='none'; el.style.transform='rotate(0deg)';
+    totalDeg=0; spinning=false;
+    document.getElementById('tapHint').style.opacity='1';
+  },350);
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const wrap = document.getElementById('wheelWrap');
-  wrap.addEventListener('click', handleWheelClick);
-  wrap.addEventListener('touchend', e => { e.preventDefault(); handleWheelClick(); }, { passive:false });
+document.addEventListener('DOMContentLoaded',()=>{
+  const wrap=document.getElementById('wheelWrap');
+  wrap.addEventListener('click',handleWheelClick);
+  wrap.addEventListener('touchend',e=>{e.preventDefault();handleWheelClick();},{passive:false});
 });
 </script>
 </body>
