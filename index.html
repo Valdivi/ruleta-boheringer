@@ -94,7 +94,7 @@ html, body {
      Segundo valor (65.4vh → 70vh) = tamaño en pantallas medianas/grandes
      Tercer valor = tamaño máximo absoluto en px
      Sube el vh para hacerla más grande, bájalo para hacerla más pequeña */
-  width: clamp(300px, 70vh, 1350px);
+  width: clamp(300px, 60vh, 1350px);
 
   aspect-ratio: 1 / 1;
   cursor:pointer;
@@ -124,7 +124,7 @@ html, body {
   position:absolute;
   top:50%; left:50%;
   transform:translate(-50%,-50%);
-  width:25%; height:25%;
+  width:20%; height:20%;
   display:block; object-fit:contain;
   pointer-events:none; z-index:4;
 }
@@ -332,9 +332,11 @@ html, body {
 /* Imagen decorativa — doble de grande
    Referencia: doble de clamp(80px,17vw,200px)
 */
+/* adorno de perritos seccion preguntas */
+
 .q-deco {
-  position:absolute; bottom:0; right:1%;
-  width: clamp(160px, 34vw, 400px);
+  position:absolute; bottom:50; right:12%;
+  width: clamp(160px, 50vw, 400px);
   pointer-events:none; z-index:0;
 }
 .q-deco img { display:block; width:100%; height:auto; }
