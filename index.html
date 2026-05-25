@@ -347,7 +347,7 @@ html, body {
      left más negativo = más oculta / menos negativo = más visible */
   .wheel-wrap {
     width: 105vw;    /* ← más grande en móvil */
-    left: -18%;
+    left: -25%;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -360,7 +360,7 @@ html, body {
 
   /* PERRO: height controla el tamaño
      bottom: 0% = pegado al piso */
-  .dog-wrap { height: 42vh; bottom: 6%; right: 3%; }
+  .dog-wrap { height: 42vh; bottom: 6%; right: 1%; }
 
   /* PREGUNTAS */
   .q-content { padding: 8% 5% 30% 5%; gap: clamp(8px, 1.5vh, 16px); }
@@ -398,7 +398,7 @@ html, body {
 
   /* RULETA centrada: 25% más grande (52vh → 65vh) */
   .wheel-wrap {
-    width: clamp(300px, 70vh, 860px);
+    width: clamp(300px, 65vh, 860px);
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
@@ -408,7 +408,7 @@ html, body {
   .dog-floor { height: 10.4vh; object-fit:cover; object-position:top; }
 
   /* PERRO desktop: separado de la pared */
-  .dog-wrap  { height: clamp(80px, 65vh, 240px); bottom:8%; right:5%; }
+  .dog-wrap  { height: clamp(80px, 90vh, 240px); bottom:8%; right:5%; }
 
   /* Preguntas en 2 columnas en desktop */
   .q-answers { display:grid; grid-template-columns:1fr 1fr; }
