@@ -184,42 +184,54 @@ html, body {
   font-size:clamp(0.7rem,1.6vh,1rem); font-weight:600;
 }
 
-/* CONTADOR CIRCULAR ────────────────────────────
-   Cambia TIMER_SECS en el JS para más/menos tiempo
-   Se vuelve rojo cuando quedan 5 segundos o menos
+/* BARRA DE TIEMPO ──────────────────────────────
+   Aparece debajo del badge, se vacía de izquierda
+   a derecha. Se vuelve roja cuando quedan <= 5 seg.
+   Cambia TIMER_SECS en el JS para más/menos tiempo.
 ─────────────────────────────────────────────── */
-.q-timer {
-  position:relative;
-  width: clamp(44px, 6vh, 72px);
-  height: clamp(44px, 6vh, 72px);
+.q-timer-bar-wrap {
+  display:flex; align-items:center; gap:clamp(8px,1.2vw,16px);
+}
+/* Icono reloj */
+.q-timer-icon {
+  font-size: clamp(1rem, 2.2vh, 1.8rem);
   flex-shrink:0;
+  transition: color 0.4s;
+  color: rgba(255,255,255,0.7);
 }
-.q-timer svg {
-  width:100%; height:100%;
-  transform: rotate(-90deg);
+/* Contenedor barra */
+.q-timer-track {
+  flex:1;
+  height: clamp(6px, 1vh, 12px);
+  background: rgba(255,255,255,0.12);
+  border-radius: 999px;
+  overflow:hidden;
 }
-.timer-bg {
-  fill:none;
-  stroke: rgba(255,255,255,0.12);
-  stroke-width: 3.5;
+/* Barra que se achica */
+.q-timer-fill {
+  height:100%;
+  width:100%;
+  background: linear-gradient(to right, #3dbf6a, #b9efce);
+  border-radius: 999px;
+  transform-origin: left center;
+  transition: transform 1s linear, background 0.5s;
 }
-.timer-ring {
-  fill:none;
-  stroke: #3dbf6a;
-  stroke-width: 3.5;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 1s linear, stroke 0.5s;
-}
-.timer-num {
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
-  font-size: clamp(0.85rem, 2vh, 1.4rem);
+/* Número de segundos */
+.q-timer-num {
+  font-size: clamp(0.8rem, 1.8vh, 1.4rem);
   font-weight:800; color:white;
   font-family: var(--font);
+  flex-shrink:0;
+  min-width: 2.5ch;
+  text-align:right;
+  transition: color 0.4s;
 }
-/* Rojo urgente cuando quedan <= 5 seg */
-.q-timer.urgent .timer-ring { stroke: #e05252; }
-.q-timer.urgent .timer-num  { color: #ffaaaa; }
+/* Estado urgente (<=5 seg) */
+.q-timer-bar-wrap.urgent .q-timer-fill {
+  background: linear-gradient(to right, #e05252, #ffaaaa);
+}
+.q-timer-bar-wrap.urgent .q-timer-num  { color: #ffaaaa; }
+.q-timer-bar-wrap.urgent .q-timer-icon { color: #ffaaaa; }
 
 .q-text {
   color:var(--white);
@@ -309,8 +321,9 @@ html, body {
   .q-answers { gap:clamp(12px,3vh,26px); }
   .ans-btn { font-size:clamp(1rem,2.6vh,1.9rem); padding:clamp(14px,2.6vh,32px) clamp(20px,3vw,44px); }
   .q-deco { width:clamp(160px,50vw,400px); bottom:5%; right:5%; }
-  /* Contador más grande en 55" */
-  .q-timer { width:clamp(60px,7vh,90px); height:clamp(60px,7vh,90px); }
+  /* Barra de tiempo más gruesa en 55" */
+  .q-timer-track { height: clamp(10px, 1.2vh, 18px); }
+  .q-timer-num { font-size: clamp(1rem, 2.2vh, 1.8rem); }
 }
 
 /* 📱 MÓVIL */
@@ -325,8 +338,9 @@ html, body {
   .ans-btn { font-size:clamp(0.8rem,3vw,1rem); padding:clamp(8px,1.5vh,14px) clamp(12px,3vw,20px); }
   .q-deco { width:38vw; bottom:5%; right:5%; }
   .dog-floor { height:6vh; object-fit:cover; object-position:top; }
-  /* Contador más pequeño en móvil */
-  .q-timer { width:clamp(36px,5vh,52px); height:clamp(36px,5vh,52px); }
+  /* Barra de tiempo en móvil */
+  .q-timer-track { height: 5px; }
+  .q-timer-icon { font-size: 0.9rem; }
 }
 
 /* 📱 TABLET */
@@ -378,25 +392,22 @@ html, body {
   <div class="q-content">
 
     <div class="q-badge">
-      <!-- Izquierda: número de pregunta -->
       <div class="q-badge-left">
         <div class="q-num-circle" id="q-num">1</div>
         <div class="q-label-txt">Pregunta</div>
       </div>
-      <!-- Derecha: contador circular -->
-      <div class="q-timer" id="q-timer">
-        <svg viewBox="0 0 36 36">
-          <!-- Círculo fondo -->
-          <circle class="timer-bg"   cx="18" cy="18" r="15.9"/>
-          <!-- Círculo progreso: circunferencia = 2π×15.9 ≈ 99.9 -->
-          <circle class="timer-ring" cx="18" cy="18" r="15.9"
-                  stroke-dasharray="99.9" stroke-dashoffset="0" id="timer-ring"/>
-        </svg>
-        <div class="timer-num" id="timer-num">15</div>
-      </div>
     </div>
 
     <div class="q-text" id="q-text"></div>
+
+    <!-- Barra de tiempo con icono reloj -->
+    <div class="q-timer-bar-wrap" id="q-timer">
+      <span class="q-timer-icon">⏱</span>
+      <div class="q-timer-track">
+        <div class="q-timer-fill" id="timer-fill"></div>
+      </div>
+      <span class="q-timer-num" id="timer-num">15</span>
+    </div>
     <div class="q-answers" id="q-answers"></div>
     <div class="q-result" id="q-result"></div>
   </div>
@@ -431,7 +442,6 @@ const QUESTIONS=[
 const DECO_IMGS=['imagen_decorativa_preguntas-05.png','imagen_decorativa_preguntas-06.png','imagen_decorativa_preguntas-07.png','imagen_decorativa_preguntas-08.png','imagen_decorativa_preguntas-09.png'];
 const N_SEG=10,DEG_SEG=36,PTR_DEG=90,SPIN_MS=4500,PAUSE_MS=1250;
 const TIMER_SECS=15;  /* ← segundos del contador, cámbialo para más o menos tiempo */
-const CIRC=99.9;      /* circunferencia del círculo SVG — no cambiar */
 let spinning=false,totalDeg=0,timerInterval=null;
 
 /* ── CONTADOR ──────────────────────────────────
@@ -442,16 +452,16 @@ let spinning=false,totalDeg=0,timerInterval=null;
 function startTimer(correctIdx){
   clearInterval(timerInterval);
   let s=TIMER_SECS;
-  const ring=document.getElementById('timer-ring');
+  const fill=document.getElementById('timer-fill');
   const numEl=document.getElementById('timer-num');
   const timerEl=document.getElementById('q-timer');
   timerEl.classList.remove('urgent');
-  ring.style.strokeDashoffset='0';
+  fill.style.transform='scaleX(1)';   // barra llena al inicio
   numEl.textContent=s;
   timerInterval=setInterval(()=>{
     s--;
     numEl.textContent=s;
-    ring.style.strokeDashoffset=String(CIRC*(1-s/TIMER_SECS));
+    fill.style.transform='scaleX('+String(s/TIMER_SECS)+')';
     if(s<=5) timerEl.classList.add('urgent');
     if(s<=0){ clearInterval(timerInterval); timeOut(correctIdx); }
   },1000);
