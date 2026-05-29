@@ -9,12 +9,12 @@
 <style>
 
 :root {
-  --bg:      #0d302a;   /* ← COLOR DE FONDO PRINCIPAL */
+  --bg:      #0d302a;
   --green:   #58b46e;
   --gdk:     #3dbf6a;
   --white:   #ffffff;
-  --correct: #b9efce;   /* ← COLOR BOTÓN RESPUESTA CORRECTA */
-  --wrong:   #f6ceb9;   /* ← COLOR BOTÓN RESPUESTA INCORRECTA */
+  --correct: #b9efce;
+  --wrong:   #f6ceb9;
   --font:    'DM Sans', system-ui, sans-serif;
   --slide-t: 0.65s;
 }
@@ -32,7 +32,6 @@ html, body {
 
 #app { position:fixed; inset:0; overflow:hidden; }
 
-/* ── SLIDE ── */
 .screen {
   position:absolute; inset:0;
   will-change:transform;
@@ -44,7 +43,7 @@ html, body {
 #app.show-q #scr-question { transform:translateX(0%); }
 
 /* ================================================================
-   PANTALLA 1 — RULETA (estilos base compartidos)
+   PANTALLA 1 — RULETA
 ================================================================ */
 #scr-wheel { background:var(--bg); overflow:hidden; }
 
@@ -55,25 +54,20 @@ html, body {
   pointer-events:none;
 }
 
-/* LOGO base */
 .logo-wrap {
   position:absolute;
-  top: 4%;
-  left: 50%;
+  top: 4%; left: 50%;
   transform: translateX(-50%);
   z-index:20;
 }
 .logo-wrap img {
   width: clamp(160px, 36.4vh, 700px);
-  height: auto;
-  display:block;
+  height: auto; display:block;
 }
 
-/* RULETA base */
 .wheel-wrap {
   position:absolute;
-  top: 45%;
-  left: -45%;
+  top: 45%; left: -45%;
   transform: translateY(-40%);
   width: clamp(300px, 63vh, 1350px);
   aspect-ratio: 1/1;
@@ -82,7 +76,6 @@ html, body {
   z-index:10;
 }
 
-/* Capa 1: GIRA — ruleta.png */
 #wheel-spin {
   position:absolute; top:0; left:0;
   width:100%; height:100%;
@@ -90,7 +83,6 @@ html, body {
   transform-origin:50% 50%;
 }
 
-/* Capa 2: FIJA — contorno verde exterior */
 .wheel-contorno {
   position:absolute; top:0; left:0;
   width:100%; height:100%;
@@ -98,8 +90,6 @@ html, body {
   pointer-events:none; z-index:3;
 }
 
-/* Capa 3: FIJA — centro decorativo
-   width/height → tamaño del logo central (% del diámetro) */
 .wheel-centro {
   position:absolute;
   top:50%; left:50%;
@@ -109,7 +99,6 @@ html, body {
   pointer-events:none; z-index:4;
 }
 
-/* Puntero */
 .wheel-pointer {
   position:absolute;
   right:-8%; top:50%;
@@ -119,7 +108,6 @@ html, body {
   filter:drop-shadow(0 2px 8px rgba(0,0,0,0.3));
 }
 
-/* TAP HINT base */
 .tap-hint {
   position:absolute;
   top:50%; right:5%;
@@ -132,23 +120,14 @@ html, body {
 }
 @keyframes breathe { 0%,100%{opacity:.4;} 50%{opacity:.9;} }
 
-/* PERRO base
-   bottom → sube/baja (0% = pegado al piso)
-   right  → distancia del borde derecho
-   height → tamaño */
 .dog-wrap {
   position:absolute;
-  bottom: 7%;
-  right: 2%;
+  bottom: 7%; right: 2%;
   height: clamp(120px, 28vh, 580px);
   pointer-events:none; z-index:5;
 }
-.dog-wrap img {
-  height:100%; width:auto;
-  display:block;
-}
+.dog-wrap img { height:100%; width:auto; display:block; }
 
-/* PISO base — 100% ancho */
 .dog-floor {
   position:absolute;
   bottom:0; left:0;
@@ -162,13 +141,8 @@ html, body {
 ================================================================ */
 #scr-question {
   background: linear-gradient(to right,
-    #0d302a  0%,
-    #0d302a 36%,
-    #163d34 53%,
-    #266348 68%,
-    #3d9460 83%,
-    #58b46e 100%
-  );
+    #0d302a  0%, #0d302a 36%, #163d34 53%,
+    #266348 68%, #3d9460 83%, #58b46e 100%);
   overflow-y:auto; overflow-x:hidden;
 }
 
@@ -179,9 +153,6 @@ html, body {
   pointer-events:none; z-index:0;
 }
 
-/* CONTENIDO base
-   padding → último valor = espacio abajo para el adorno
-   gap     → espacio entre elementos */
 .q-content {
   position:relative; min-height:100%;
   display:flex; flex-direction:column; justify-content:center;
@@ -190,16 +161,32 @@ html, body {
   z-index:1;
 }
 
-/* BADGE — fila con badge izquierda y contador derecha */
+/* ── BADGE + CONTADOR ─────────────────────────
+   Badge izquierda, contador circular derecha
+─────────────────────────────────────────────── */
 .q-badge {
   display:flex; align-items:center;
   justify-content:space-between;
 }
 .q-badge-left { display:flex; align-items:center; gap:14px; }
 
+.q-num-circle {
+  width:clamp(44px,7vh,82px); height:clamp(44px,7vh,82px);
+  background:var(--green); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:clamp(1.1rem,3.5vh,2.2rem); font-weight:800; color:white;
+  flex-shrink:0;
+  box-shadow:0 0 0 4px rgba(88,180,110,0.25);
+}
+.q-label-txt {
+  text-transform:uppercase; letter-spacing:3px;
+  color:rgba(255,255,255,0.55);
+  font-size:clamp(0.7rem,1.6vh,1rem); font-weight:600;
+}
+
 /* CONTADOR CIRCULAR ────────────────────────────
-   Círculo SVG con número de segundos en el centro
-   Se vuelve rojo cuando quedan <= 5 segundos
+   Cambia TIMER_SECS en el JS para más/menos tiempo
+   Se vuelve rojo cuando quedan 5 segundos o menos
 ─────────────────────────────────────────────── */
 .q-timer {
   position:relative;
@@ -218,7 +205,7 @@ html, body {
 }
 .timer-ring {
   fill:none;
-  stroke: #3dbf6a;    /* ← verde normal */
+  stroke: #3dbf6a;
   stroke-width: 3.5;
   stroke-linecap: round;
   transition: stroke-dashoffset 1s linear, stroke 0.5s;
@@ -230,36 +217,16 @@ html, body {
   font-weight:800; color:white;
   font-family: var(--font);
 }
-/* Rojo cuando quedan <= 5 segundos */
+/* Rojo urgente cuando quedan <= 5 seg */
 .q-timer.urgent .timer-ring { stroke: #e05252; }
 .q-timer.urgent .timer-num  { color: #ffaaaa; }
 
-.q-num-circle {
-  width:clamp(44px,7vh,82px); height:clamp(44px,7vh,82px);
-  background:var(--green); border-radius:50%;
-  display:flex; align-items:center; justify-content:center;
-  font-size:clamp(1.1rem,3.5vh,2.2rem); font-weight:800; color:white;
-  flex-shrink:0;
-  box-shadow:0 0 0 4px rgba(88,180,110,0.25);
-}
-.q-label-txt {
-  text-transform:uppercase; letter-spacing:3px;
-  color:rgba(255,255,255,0.55);
-  font-size:clamp(0.7rem,1.6vh,1rem); font-weight:600;
-}
-
-/* TEXTO PREGUNTA base
-   font-size → sube el vh para más grande */
 .q-text {
   color:var(--white);
   font-size:clamp(1.2rem, 4.5vh, 2.6rem);
   font-weight:700; line-height:1.5;
 }
 
-/* BOTONES base
-   gap       → separación entre botones
-   padding   → espacio dentro del botón
-   font-size → tamaño de letra */
 .q-answers {
   display:flex; flex-direction:column;
   gap:clamp(12px, 3vh, 26px);
@@ -283,25 +250,13 @@ html, body {
   transform:translateX(8px);
   box-shadow:0 4px 20px rgba(88,180,110,0.25);
 }
+.ans-icon { font-style:normal; font-size:1.25em; min-width:1.5em; text-align:center; flex-shrink:0; }
 
-.ans-icon {
-  font-style:normal; font-size:1.25em;
-  min-width:1.5em; text-align:center; flex-shrink:0;
-}
-
-.ans-btn.is-correct {
-  background:#b9efce; color:#0a2b1e; border-color:#b9efce;
-  transform:none; box-shadow:0 4px 24px rgba(185,239,206,0.5);
-}
+.ans-btn.is-correct  { background:#b9efce; color:#0a2b1e; border-color:#b9efce; transform:none; box-shadow:0 4px 24px rgba(185,239,206,0.5); }
 .ans-btn.is-correct .ans-icon { animation:pop .4s ease; }
-.ans-btn.is-wrong {
-  background:#f6ceb9; color:#4a1a08; border-color:#f6ceb9; transform:none;
-}
-.ans-btn.show-correct {
-  background:#b9efce; color:#0a2b1e; border-color:#b9efce;
-  animation:reveal .5s ease;
-}
-.ans-btn.disabled { pointer-events:none; opacity:.7; }
+.ans-btn.is-wrong    { background:#f6ceb9; color:#4a1a08; border-color:#f6ceb9; transform:none; }
+.ans-btn.show-correct{ background:#b9efce; color:#0a2b1e; border-color:#b9efce; animation:reveal .5s ease; }
+.ans-btn.disabled    { pointer-events:none; opacity:.7; }
 
 @keyframes pop    { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
 @keyframes reveal { 0%{transform:translateX(0)} 25%{transform:translateX(-6px)} 50%{transform:translateX(6px)} 100%{transform:translateX(0)} }
@@ -317,20 +272,13 @@ html, body {
 .q-result.wrong   { display:block; background:rgba(246,206,185,0.2); color:#f6ceb9; border:2px solid rgba(246,206,185,0.35); }
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px) scale(.96)} to{opacity:1;transform:translateY(0) scale(1)} }
 
-/* ADORNO base
-   bottom → sube/baja
-   right  → aleja/acerca del borde
-   width  → tamaño */
 .q-deco {
-  position:absolute;
-  bottom: 0%;
-  right: 1%;
+  position:absolute; bottom: 0%; right: 1%;
   width: clamp(160px, 50vw, 400px);
   pointer-events:none; z-index:0;
 }
 .q-deco img { display:block; width:100%; height:auto; }
 
-/* BOTÓN VOLVER base */
 .btn-volver {
   position:absolute; bottom:4%; left:5%;
   background:transparent;
@@ -341,8 +289,7 @@ html, body {
   cursor:pointer; letter-spacing:0.5px;
   opacity:0; pointer-events:none;
   transition:opacity .4s, background .25s, border-color .25s, transform .2s;
-  z-index:10;
-  display:flex; align-items:center; gap:8px;
+  z-index:10; display:flex; align-items:center; gap:8px;
 }
 .btn-volver.show { opacity:1; pointer-events:all; }
 .btn-volver:hover { background:rgba(255,255,255,0.12); border-color:white; transform:translateX(-4px); }
@@ -352,134 +299,55 @@ html, body {
    RESPONSIVE — CADA VISTA SEPARADA
 ================================================================ */
 
-/* ══════════════════════════════════════════════
-   📺 55" PORTRAIT
-   Condición: ancho >= 1000px Y alto >= 1400px
-   ══════════════════════════════════════════════ */
+/* 📺 55" */
 @media (min-width:1000px) and (min-height:1400px) {
-
-  /* RULETA 55"
-     left  → más negativo = más oculta a la izquierda
-     width → tamaño de la ruleta */
-  .wheel-wrap {
-    top: 45%;
-    left: -45%;
-    transform: translateY(-40%);
-    width: clamp(300px, 63vh, 1350px);
-  }
-
-  /* LOGO 55" */
-  .logo-wrap img { width: clamp(160px, 36.4vh, 700px); }
-
-  /* TAP HINT 55" */
+  .wheel-wrap { top:45%; left:-43%; transform:translateY(-40%); width:clamp(300px,63vh,1350px); }
+  .logo-wrap img { width:clamp(160px,36.4vh,700px); }
   .tap-hint { top:50%; right:5%; font-size:clamp(1rem,1.8vh,1.6rem); }
-
-  /* PERRO 55"
-     height → tamaño
-     bottom → posición vertical (0% = pegado al piso)
-     right  → distancia del borde derecho */
-  .dog-wrap { height: clamp(400px, 38vh, 730px); bottom:6%; right:-2%; }
-
-  /* PREGUNTAS 55" */
-  .q-text { font-size:clamp(1.2rem, 4.5vh, 2.6rem); }
-  .q-answers { gap:clamp(12px, 3vh, 26px); }
-  .ans-btn {
-    font-size:clamp(1rem, 2.6vh, 1.9rem);
-    padding:clamp(14px, 2.6vh, 32px) clamp(20px, 3vw, 44px);
-  }
-
-  /* ADORNO 55"
-     width → tamaño */
-  .q-deco { width: clamp(160px, 50vw, 400px); bottom:0%; right:1%; }
+  .dog-wrap { height:clamp(400px,38vh,730px); bottom:6.5%; right:-6%; }
+  .q-text { font-size:clamp(1.2rem,4.5vh,2.6rem); }
+  .q-answers { gap:clamp(12px,3vh,26px); }
+  .ans-btn { font-size:clamp(1rem,2.6vh,1.9rem); padding:clamp(14px,2.6vh,32px) clamp(20px,3vw,44px); }
+  .q-deco { width:clamp(160px,50vw,400px); bottom:5%; right:5%; }
+  /* Contador más grande en 55" */
+  .q-timer { width:clamp(60px,7vh,90px); height:clamp(60px,7vh,90px); }
 }
 
-/* ══════════════════════════════════════════════
-   📱 MÓVIL portrait (ancho < 600px)
-   ══════════════════════════════════════════════ */
+/* 📱 MÓVIL */
 @media (max-width:600px) and (orientation:portrait) {
-
-  /* RULETA móvil
-     width → tamaño (vw = % del ancho de pantalla)
-     left  → menos negativo = más visible */
-  .wheel-wrap {
-    width: 104vw;
-    left: -25%;
-    top: 50%;
-    transform: translateY(-50%);
-  }
-
-  /* LOGO móvil */
-  .logo-wrap img { width: 55vw; }
-
-  /* TAP HINT móvil */
-  .tap-hint { top: 32%; right: 3%; font-size: 0.72rem; }
-
-  /* PERRO móvil
-     height → tamaño
-     bottom → posición vertical */
-  .dog-wrap { height: 42vh; bottom: 6%; right: 5%; }
-
-  /* PREGUNTAS móvil */
-  .q-content { padding: 8% 5% 30% 5%; gap: clamp(8px, 1.5vh, 16px); }
-  .q-text    { font-size: clamp(0.95rem, 3.5vw, 1.3rem); }
-  .q-answers { gap: clamp(6px, 1vh, 12px); }
-  .ans-btn {
-    font-size: clamp(0.8rem, 3vw, 1rem);
-    padding: clamp(8px, 1.5vh, 14px) clamp(12px, 3vw, 20px);
-  }
-
-  /* ADORNO móvil */
-  .q-deco { width: 38vw; bottom: 5%; right: 5%; }
+  .wheel-wrap { width:105vw; left:-37%; top:50%; transform:translateY(-50%); }
+  .logo-wrap img { width:55vw; }
+  .tap-hint { top:32%; right:3%; font-size:0.72rem; }
+  .dog-wrap { height:40vh; bottom:3%; right:-7%; }
+  .q-content { padding:8% 5% 30% 5%; gap:clamp(8px,1.5vh,16px); }
+  .q-text { font-size:clamp(0.95rem,3.5vw,1.3rem); }
+  .q-answers { gap:clamp(6px,1vh,12px); }
+  .ans-btn { font-size:clamp(0.8rem,3vw,1rem); padding:clamp(8px,1.5vh,14px) clamp(12px,3vw,20px); }
+  .q-deco { width:38vw; bottom:5%; right:5%; }
+  .dog-floor { height:6vh; object-fit:cover; object-position:top; }
+  /* Contador más pequeño en móvil */
+  .q-timer { width:clamp(36px,5vh,52px); height:clamp(36px,5vh,52px); }
 }
 
-/* ══════════════════════════════════════════════
-   📱 TABLET portrait (601px – 1024px)
-   ══════════════════════════════════════════════ */
+/* 📱 TABLET */
 @media (min-width:601px) and (max-width:1024px) and (orientation:portrait) {
-
-  /* RULETA tablet */
-  .wheel-wrap {
-    left: -45%;
-    top: 45%;
-    transform: translateY(-40%);
-    width: clamp(320px, 64vh, 950px);
-  }
-
-  /* PERRO tablet */
-  .dog-wrap { height: clamp(110px, 28vh, 480px); bottom:0%; }
-
-  /* ADORNO tablet */
-  .q-deco { width: clamp(140px, 35vw, 320px); }
+  .wheel-wrap { left:-29%; top:45%; transform:translateY(-40%); width:clamp(320px,70vh,950px); }
+  .logo-wrap img { width:clamp(120px,27vh,320px); }
+  .dog-wrap { height:clamp(110px,45vh,650px); bottom:5%; right:-3%; }
+  .q-text { font-size:clamp(1rem,2.8vh,1.8rem); }
+  .q-answers { gap:clamp(8px,1.5vh,16px); }
+  .ans-btn { font-size:clamp(0.85rem,2vh,1.3rem); padding:clamp(10px,1.8vh,22px) clamp(14px,2vw,30px); }
+  .q-deco { width:clamp(120px,28vw,260px); bottom:3%; right:3%; }
+  .dog-floor { height:8vh; object-fit:cover; object-position:top; }
 }
 
-/* ══════════════════════════════════════════════
-   💻 DESKTOP landscape (ancho > 900px, horizontal)
-   ══════════════════════════════════════════════ */
-@media (orientation:landscape) and (min-width:900px) {
-
-  /* RULETA desktop — centrada
-     width → tamaño (sube vh para más grande) */
-  .wheel-wrap {
-    width: clamp(300px, 65vh, 860px);
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-  }
-
-  /* PISO desktop
-     height → qué tan alto se ve */
-  .dog-floor { height: 10.4vh; object-fit:cover; object-position:top; }
-
-  /* PERRO desktop
-     height → tamaño
-     bottom → posición vertical */
-  .dog-wrap { height: clamp(80px, 18vh, 240px); bottom:8%; right:5%; }
-
-  /* Preguntas en 2 columnas */
+/* 💻 DESKTOP */
+@media (orientation:landscape) and (min-width:900px) and (max-height:1399px) {
+  .wheel-wrap { width:clamp(300px,65vh,860px); left:50%; top:50%; transform:translate(-50%,-50%); }
+  .dog-floor { height:10.4vh; object-fit:cover; object-position:top; }
+  .dog-wrap { height:clamp(150px,44vh,610px); bottom:6.5%; right:19%; }
   .q-answers { display:grid; grid-template-columns:1fr 1fr; }
-
-  /* ADORNO desktop */
-  .q-deco { width: clamp(100px, 18vw, 220px); bottom:0%; right:1%; }
+  .q-deco { width:clamp(100px,18vw,350px); bottom:5%; right:5%; }
 }
 
 </style>
@@ -487,52 +355,47 @@ html, body {
 <body>
 <div id="app">
 
-<!-- ════════════════════════════════════
-     PANTALLA 1 · RULETA
-════════════════════════════════════ -->
+<!-- PANTALLA 1 · RULETA -->
 <div id="scr-wheel" class="screen">
-
   <div class="logo-wrap">
     <img src="logo_titulo.png" alt="Boehringer Ingelheim">
   </div>
-
   <div class="wheel-wrap" id="wheelWrap">
     <img id="wheel-spin"        src="ruleta.png"          alt="" draggable="false">
     <img class="wheel-contorno" src="contorno_ruleta.png" alt="" draggable="false">
     <img class="wheel-centro"   src="centro_ruleta.png"   alt="" draggable="false">
     <img class="wheel-pointer"  src="puntero.svg"         alt="" draggable="false">
   </div>
-
   <div class="tap-hint" id="tapHint">Toca la ruleta<br>para girar</div>
-
   <div class="dog-wrap">
     <img src="perro_final.gif" alt="" draggable="false">
   </div>
-
   <img class="dog-floor" src="piso_para_video.png" alt="" draggable="false">
-
 </div>
 
-<!-- ════════════════════════════════════
-     PANTALLA 2 · PREGUNTAS
-════════════════════════════════════ -->
+<!-- PANTALLA 2 · PREGUNTAS -->
 <div id="scr-question" class="screen">
-
   <div class="q-content">
+
     <div class="q-badge">
+      <!-- Izquierda: número de pregunta -->
       <div class="q-badge-left">
         <div class="q-num-circle" id="q-num">1</div>
         <div class="q-label-txt">Pregunta</div>
       </div>
+      <!-- Derecha: contador circular -->
       <div class="q-timer" id="q-timer">
         <svg viewBox="0 0 36 36">
+          <!-- Círculo fondo -->
           <circle class="timer-bg"   cx="18" cy="18" r="15.9"/>
+          <!-- Círculo progreso: circunferencia = 2π×15.9 ≈ 99.9 -->
           <circle class="timer-ring" cx="18" cy="18" r="15.9"
                   stroke-dasharray="99.9" stroke-dashoffset="0" id="timer-ring"/>
         </svg>
         <div class="timer-num" id="timer-num">15</div>
       </div>
     </div>
+
     <div class="q-text" id="q-text"></div>
     <div class="q-answers" id="q-answers"></div>
     <div class="q-result" id="q-result"></div>
@@ -548,7 +411,6 @@ html, body {
     </svg>
     Volver al juego
   </button>
-
 </div>
 
 </div>
@@ -567,68 +429,50 @@ const QUESTIONS=[
   {q:'¿Qué parásitos internos ayuda a controlar NexGard Spectra?',opts:['Ascaridios, ancilostómidos y tricúridos','Solo tenias','Solo protozoarios','Ningún parásito intestinal'],correct:0}
 ];
 const DECO_IMGS=['imagen_decorativa_preguntas-05.png','imagen_decorativa_preguntas-06.png','imagen_decorativa_preguntas-07.png','imagen_decorativa_preguntas-08.png','imagen_decorativa_preguntas-09.png'];
-const N_SEG=10,DEG_SEG=36,PTR_DEG=90,SPIN_MS=4500,PAUSE_MS=1500;
-const TIMER_SECS=15;        // ← segundos del contador (cámbialo para más o menos tiempo)
-const CIRC=99.9;            // circunferencia del círculo SVG (no cambiar)
+const N_SEG=10,DEG_SEG=36,PTR_DEG=90,SPIN_MS=4500,PAUSE_MS=1250;
+const TIMER_SECS=15;  /* ← segundos del contador, cámbialo para más o menos tiempo */
+const CIRC=99.9;      /* circunferencia del círculo SVG — no cambiar */
 let spinning=false,totalDeg=0,timerInterval=null;
 
-/* ── CONTADOR CIRCULAR ─────────────────────────
-   Arranca cuando se muestra la pregunta.
-   Se para cuando el participante responde.
-   Cuando llega a 0 muestra la respuesta correcta automáticamente.
-────────────────────────────────────────────── */
-function startTimer(correctIdx) {
+/* ── CONTADOR ──────────────────────────────────
+   startTimer(correctIdx) → arranca al mostrar pregunta
+   stopTimer()            → se llama al responder o volver
+   timeOut(correctIdx)    → se llama cuando llega a 0
+─────────────────────────────────────────────── */
+function startTimer(correctIdx){
   clearInterval(timerInterval);
-  let secsLeft = TIMER_SECS;
-  const ring    = document.getElementById('timer-ring');
-  const numEl   = document.getElementById('timer-num');
-  const timerEl = document.getElementById('q-timer');
-
-  // Reset visual
+  let s=TIMER_SECS;
+  const ring=document.getElementById('timer-ring');
+  const numEl=document.getElementById('timer-num');
+  const timerEl=document.getElementById('q-timer');
   timerEl.classList.remove('urgent');
-  ring.style.strokeDashoffset = '0';
-  numEl.textContent = secsLeft;
-
-  timerInterval = setInterval(() => {
-    secsLeft--;
-    // Actualiza número
-    numEl.textContent = secsLeft;
-    // Actualiza arco: dashoffset crece de 0 a CIRC a medida que el tiempo pasa
-    ring.style.strokeDashoffset = String(CIRC * (1 - secsLeft / TIMER_SECS));
-    // Rojo al llegar a 5 segundos
-    if (secsLeft <= 5) timerEl.classList.add('urgent');
-    // Tiempo agotado → mostrar correcta automáticamente
-    if (secsLeft <= 0) {
-      clearInterval(timerInterval);
-      timeOut(correctIdx);
-    }
-  }, 1000);
+  ring.style.strokeDashoffset='0';
+  numEl.textContent=s;
+  timerInterval=setInterval(()=>{
+    s--;
+    numEl.textContent=s;
+    ring.style.strokeDashoffset=String(CIRC*(1-s/TIMER_SECS));
+    if(s<=5) timerEl.classList.add('urgent');
+    if(s<=0){ clearInterval(timerInterval); timeOut(correctIdx); }
+  },1000);
 }
 
-function stopTimer() {
-  clearInterval(timerInterval);
-}
+function stopTimer(){ clearInterval(timerInterval); }
 
-function timeOut(correctIdx) {
-  // Deshabilitar todos los botones
-  const allBtns = [...document.querySelectorAll('.ans-btn')];
-  allBtns.forEach(b => b.classList.add('disabled'));
-  // Iluminar la correcta
-  const correctBtn = allBtns[correctIdx];
-  if (correctBtn) {
-    correctBtn.classList.remove('disabled');
-    correctBtn.classList.add('show-correct');
-    correctBtn.querySelector('.ans-icon').textContent = '✓';
-  }
-  // Banner de tiempo agotado
-  const el = document.getElementById('q-result');
-  el.className = 'q-result wrong';
-  el.innerHTML = '⏱️ ¡Tiempo agotado! La respuesta correcta está marcada en verde.';
+function timeOut(correctIdx){
+  const allBtns=[...document.querySelectorAll('.ans-btn')];
+  allBtns.forEach(b=>b.classList.add('disabled'));
+  const cb=allBtns[correctIdx];
+  if(cb){ cb.classList.remove('disabled'); cb.classList.add('show-correct'); cb.querySelector('.ans-icon').textContent='✓'; }
+  const el=document.getElementById('q-result');
+  el.className='q-result wrong';
+  el.innerHTML='⏱️ ¡Tiempo agotado! La respuesta correcta está marcada en verde.';
   document.getElementById('btn-volver').classList.add('show');
 }
+
 function handleWheelClick(){if(spinning)return;spinning=true;document.getElementById('tapHint').style.opacity='0';doSpin(Math.floor(Math.random()*N_SEG)+1);}
 function doSpin(seg){const el=document.getElementById('wheel-spin');const segCenter=(seg-1)*DEG_SEG;const alignAngle=((PTR_DEG-segCenter)%360+360)%360;const curMod=totalDeg%360;let delta=(alignAngle-curMod+360)%360;if(delta<10)delta+=360;const newTotal=totalDeg+5*360+delta;el.style.transition=`transform ${SPIN_MS}ms cubic-bezier(0.08,0.92,0.18,1)`;el.style.transform=`rotate(${newTotal}deg)`;totalDeg=newTotal;setTimeout(()=>{setTimeout(()=>showQuestion(seg),PAUSE_MS);},SPIN_MS);}
-function showQuestion(num){const data=QUESTIONS[num-1];document.getElementById('q-num').textContent=num;document.getElementById('q-text').textContent=data.q;document.getElementById('q-deco-img').src=DECO_IMGS[(num-1)%5];const resultEl=document.getElementById('q-result');resultEl.className='q-result';resultEl.textContent='';document.getElementById('btn-volver').classList.remove('show');const answersEl=document.getElementById('q-answers');answersEl.innerHTML='';data.opts.forEach((text,idx)=>{const btn=document.createElement('button');btn.className='ans-btn';btn.innerHTML=`<em class="ans-icon"></em><span>${text}</span>`;btn.addEventListener('click',()=>onAnswer(btn,idx,data.correct),{once:true});answersEl.appendChild(btn);});document.getElementById('app').classList.add('show-q'); setTimeout(()=>startTimer(data.correct), 100);}
+function showQuestion(num){const data=QUESTIONS[num-1];document.getElementById('q-num').textContent=num;document.getElementById('q-text').textContent=data.q;document.getElementById('q-deco-img').src=DECO_IMGS[(num-1)%5];const resultEl=document.getElementById('q-result');resultEl.className='q-result';resultEl.textContent='';document.getElementById('btn-volver').classList.remove('show');const answersEl=document.getElementById('q-answers');answersEl.innerHTML='';data.opts.forEach((text,idx)=>{const btn=document.createElement('button');btn.className='ans-btn';btn.innerHTML=`<em class="ans-icon"></em><span>${text}</span>`;btn.addEventListener('click',()=>onAnswer(btn,idx,data.correct),{once:true});answersEl.appendChild(btn);});document.getElementById('app').classList.add('show-q');setTimeout(()=>startTimer(data.correct),100);}
 function onAnswer(clickedBtn,selected,correct){stopTimer();const allBtns=[...document.querySelectorAll('.ans-btn')];allBtns.forEach(b=>b.classList.add('disabled'));if(selected===correct){clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-correct');clickedBtn.querySelector('.ans-icon').textContent='✓';setResult(true);}else{clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-wrong');clickedBtn.querySelector('.ans-icon').textContent='✗';allBtns[correct].classList.remove('disabled');allBtns[correct].classList.add('show-correct');allBtns[correct].querySelector('.ans-icon').textContent='✓';setResult(false);}document.getElementById('btn-volver').classList.add('show');}
 function setResult(ok){const el=document.getElementById('q-result');el.className=ok?'q-result correct':'q-result wrong';el.innerHTML=ok?'🎉 ¡Correcto! Excelente respuesta.':'❌ Incorrecto. La respuesta correcta está marcada en verde.';}
 function volverRuleta(){stopTimer();document.getElementById('app').classList.remove('show-q');setTimeout(()=>{const el=document.getElementById('wheel-spin');el.style.transition='none';el.style.transform='rotate(0deg)';totalDeg=0;spinning=false;document.getElementById('tapHint').style.opacity='1';},350);}
