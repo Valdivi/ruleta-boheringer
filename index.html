@@ -190,7 +190,50 @@ html, body {
   z-index:1;
 }
 
-.q-badge { display:flex; align-items:center; gap:14px; }
+/* BADGE — fila con badge izquierda y contador derecha */
+.q-badge {
+  display:flex; align-items:center;
+  justify-content:space-between;
+}
+.q-badge-left { display:flex; align-items:center; gap:14px; }
+
+/* CONTADOR CIRCULAR ────────────────────────────
+   Círculo SVG con número de segundos en el centro
+   Se vuelve rojo cuando quedan <= 5 segundos
+─────────────────────────────────────────────── */
+.q-timer {
+  position:relative;
+  width: clamp(44px, 6vh, 72px);
+  height: clamp(44px, 6vh, 72px);
+  flex-shrink:0;
+}
+.q-timer svg {
+  width:100%; height:100%;
+  transform: rotate(-90deg);
+}
+.timer-bg {
+  fill:none;
+  stroke: rgba(255,255,255,0.12);
+  stroke-width: 3.5;
+}
+.timer-ring {
+  fill:none;
+  stroke: #3dbf6a;    /* ← verde normal */
+  stroke-width: 3.5;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1s linear, stroke 0.5s;
+}
+.timer-num {
+  position:absolute; inset:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size: clamp(0.85rem, 2vh, 1.4rem);
+  font-weight:800; color:white;
+  font-family: var(--font);
+}
+/* Rojo cuando quedan <= 5 segundos */
+.q-timer.urgent .timer-ring { stroke: #e05252; }
+.q-timer.urgent .timer-num  { color: #ffaaaa; }
+
 .q-num-circle {
   width:clamp(44px,7vh,82px); height:clamp(44px,7vh,82px);
   background:var(--green); border-radius:50%;
@@ -320,7 +363,7 @@ html, body {
      width → tamaño de la ruleta */
   .wheel-wrap {
     top: 45%;
-    left: -43%;
+    left: -45%;
     transform: translateY(-40%);
     width: clamp(300px, 63vh, 1350px);
   }
@@ -335,7 +378,7 @@ html, body {
      height → tamaño
      bottom → posición vertical (0% = pegado al piso)
      right  → distancia del borde derecho */
-  .dog-wrap { height: clamp(400px, 38vh, 730px); bottom:6.5%; right:-6%; }
+  .dog-wrap { height: clamp(400px, 38vh, 730px); bottom:6%; right:-2%; }
 
   /* PREGUNTAS 55" */
   .q-text { font-size:clamp(1.2rem, 4.5vh, 2.6rem); }
@@ -347,7 +390,7 @@ html, body {
 
   /* ADORNO 55"
      width → tamaño */
-  .q-deco { width: clamp(160px, 50vw, 400px); bottom:5%; right:5%; }
+  .q-deco { width: clamp(160px, 50vw, 400px); bottom:0%; right:1%; }
 }
 
 /* ══════════════════════════════════════════════
@@ -359,8 +402,8 @@ html, body {
      width → tamaño (vw = % del ancho de pantalla)
      left  → menos negativo = más visible */
   .wheel-wrap {
-    width: 105vw;
-    left: -37%;
+    width: 104vw;
+    left: -25%;
     top: 50%;
     transform: translateY(-50%);
   }
@@ -374,7 +417,7 @@ html, body {
   /* PERRO móvil
      height → tamaño
      bottom → posición vertical */
-  .dog-wrap { height: 40vh; bottom: 3%; right: -7%; }
+  .dog-wrap { height: 42vh; bottom: 6%; right: 5%; }
 
   /* PREGUNTAS móvil */
   .q-content { padding: 8% 5% 30% 5%; gap: clamp(8px, 1.5vh, 16px); }
@@ -387,51 +430,32 @@ html, body {
 
   /* ADORNO móvil */
   .q-deco { width: 38vw; bottom: 5%; right: 5%; }
-
-  /* PISO móvil
-   height → reduce para que se vea menos alto */
-   .dog-floor { height: 6vh; object-fit:cover; object-position:top; }
 }
 
 /* ══════════════════════════════════════════════
    📱 TABLET portrait (601px – 1024px)
    ══════════════════════════════════════════════ */
-   @media (min-width:601px) and (max-width:1024px) and (orientation:portrait) {
+@media (min-width:601px) and (max-width:1024px) and (orientation:portrait) {
 
-/* RULETA tablet */
-.wheel-wrap {
-  left: -29%;
-  top: 45%;
-  transform: translateY(-40%);
-  width: clamp(320px, 70vh, 950px);
+  /* RULETA tablet */
+  .wheel-wrap {
+    left: -45%;
+    top: 45%;
+    transform: translateY(-40%);
+    width: clamp(320px, 64vh, 950px);
+  }
+
+  /* PERRO tablet */
+  .dog-wrap { height: clamp(110px, 28vh, 480px); bottom:0%; }
+
+  /* ADORNO tablet */
+  .q-deco { width: clamp(140px, 35vw, 320px); }
 }
 
-/* LOGO tablet — más pequeño */
-.logo-wrap img { width: clamp(120px, 27vh, 320px); }
-
-/* PERRO tablet */
-.dog-wrap { height: clamp(110px, 45vh, 650px); bottom:5% ; right: -3%;}
-
-/* PREGUNTAS tablet — letras más pequeñas */
-.q-text { font-size: clamp(1rem, 2.8vh, 1.8rem); }
-
-/* BOTONES tablet — menos separación */
-.q-answers { gap: clamp(8px, 1.5vh, 16px); }
-.ans-btn {
-  font-size: clamp(0.85rem, 2vh, 1.3rem);
-  padding: clamp(10px, 1.8vh, 22px) clamp(14px, 2vw, 30px);
-}
-
-/* ADORNO tablet — separado de los bordes */
-.q-deco { width: clamp(120px, 28vw, 260px); bottom:3%; right:3%; }
-
-/* PISO tablet — ajusta el vh para más alto o más bajo */
-.dog-floor { height: 8vh; object-fit:cover; object-position:top; }
-}
 /* ══════════════════════════════════════════════
    💻 DESKTOP landscape (ancho > 900px, horizontal)
    ══════════════════════════════════════════════ */
-   @media (orientation:landscape) and (min-width:900px) and (max-height:1399px) {
+@media (orientation:landscape) and (min-width:900px) {
 
   /* RULETA desktop — centrada
      width → tamaño (sube vh para más grande) */
@@ -449,13 +473,13 @@ html, body {
   /* PERRO desktop
      height → tamaño
      bottom → posición vertical */
-  .dog-wrap { height: clamp(150px, 44vh, 610px); bottom:6.5%; right:19%; }
+  .dog-wrap { height: clamp(80px, 18vh, 240px); bottom:8%; right:5%; }
 
   /* Preguntas en 2 columnas */
   .q-answers { display:grid; grid-template-columns:1fr 1fr; }
 
   /* ADORNO desktop */
-  .q-deco { width: clamp(100px, 18vw, 350px); bottom:5%; right:5%; }
+  .q-deco { width: clamp(100px, 18vw, 220px); bottom:0%; right:1%; }
 }
 
 </style>
@@ -496,8 +520,18 @@ html, body {
 
   <div class="q-content">
     <div class="q-badge">
-      <div class="q-num-circle" id="q-num">1</div>
-      <div class="q-label-txt">Pregunta</div>
+      <div class="q-badge-left">
+        <div class="q-num-circle" id="q-num">1</div>
+        <div class="q-label-txt">Pregunta</div>
+      </div>
+      <div class="q-timer" id="q-timer">
+        <svg viewBox="0 0 36 36">
+          <circle class="timer-bg"   cx="18" cy="18" r="15.9"/>
+          <circle class="timer-ring" cx="18" cy="18" r="15.9"
+                  stroke-dasharray="99.9" stroke-dashoffset="0" id="timer-ring"/>
+        </svg>
+        <div class="timer-num" id="timer-num">15</div>
+      </div>
     </div>
     <div class="q-text" id="q-text"></div>
     <div class="q-answers" id="q-answers"></div>
@@ -533,14 +567,71 @@ const QUESTIONS=[
   {q:'¿Qué parásitos internos ayuda a controlar NexGard Spectra?',opts:['Ascaridios, ancilostómidos y tricúridos','Solo tenias','Solo protozoarios','Ningún parásito intestinal'],correct:0}
 ];
 const DECO_IMGS=['imagen_decorativa_preguntas-05.png','imagen_decorativa_preguntas-06.png','imagen_decorativa_preguntas-07.png','imagen_decorativa_preguntas-08.png','imagen_decorativa_preguntas-09.png'];
-const N_SEG=10,DEG_SEG=36,PTR_DEG=90,SPIN_MS=4500,PAUSE_MS=1250;
-let spinning=false,totalDeg=0;
+const N_SEG=10,DEG_SEG=36,PTR_DEG=90,SPIN_MS=4500,PAUSE_MS=1500;
+const TIMER_SECS=15;        // ← segundos del contador (cámbialo para más o menos tiempo)
+const CIRC=99.9;            // circunferencia del círculo SVG (no cambiar)
+let spinning=false,totalDeg=0,timerInterval=null;
+
+/* ── CONTADOR CIRCULAR ─────────────────────────
+   Arranca cuando se muestra la pregunta.
+   Se para cuando el participante responde.
+   Cuando llega a 0 muestra la respuesta correcta automáticamente.
+────────────────────────────────────────────── */
+function startTimer(correctIdx) {
+  clearInterval(timerInterval);
+  let secsLeft = TIMER_SECS;
+  const ring    = document.getElementById('timer-ring');
+  const numEl   = document.getElementById('timer-num');
+  const timerEl = document.getElementById('q-timer');
+
+  // Reset visual
+  timerEl.classList.remove('urgent');
+  ring.style.strokeDashoffset = '0';
+  numEl.textContent = secsLeft;
+
+  timerInterval = setInterval(() => {
+    secsLeft--;
+    // Actualiza número
+    numEl.textContent = secsLeft;
+    // Actualiza arco: dashoffset crece de 0 a CIRC a medida que el tiempo pasa
+    ring.style.strokeDashoffset = String(CIRC * (1 - secsLeft / TIMER_SECS));
+    // Rojo al llegar a 5 segundos
+    if (secsLeft <= 5) timerEl.classList.add('urgent');
+    // Tiempo agotado → mostrar correcta automáticamente
+    if (secsLeft <= 0) {
+      clearInterval(timerInterval);
+      timeOut(correctIdx);
+    }
+  }, 1000);
+}
+
+function stopTimer() {
+  clearInterval(timerInterval);
+}
+
+function timeOut(correctIdx) {
+  // Deshabilitar todos los botones
+  const allBtns = [...document.querySelectorAll('.ans-btn')];
+  allBtns.forEach(b => b.classList.add('disabled'));
+  // Iluminar la correcta
+  const correctBtn = allBtns[correctIdx];
+  if (correctBtn) {
+    correctBtn.classList.remove('disabled');
+    correctBtn.classList.add('show-correct');
+    correctBtn.querySelector('.ans-icon').textContent = '✓';
+  }
+  // Banner de tiempo agotado
+  const el = document.getElementById('q-result');
+  el.className = 'q-result wrong';
+  el.innerHTML = '⏱️ ¡Tiempo agotado! La respuesta correcta está marcada en verde.';
+  document.getElementById('btn-volver').classList.add('show');
+}
 function handleWheelClick(){if(spinning)return;spinning=true;document.getElementById('tapHint').style.opacity='0';doSpin(Math.floor(Math.random()*N_SEG)+1);}
 function doSpin(seg){const el=document.getElementById('wheel-spin');const segCenter=(seg-1)*DEG_SEG;const alignAngle=((PTR_DEG-segCenter)%360+360)%360;const curMod=totalDeg%360;let delta=(alignAngle-curMod+360)%360;if(delta<10)delta+=360;const newTotal=totalDeg+5*360+delta;el.style.transition=`transform ${SPIN_MS}ms cubic-bezier(0.08,0.92,0.18,1)`;el.style.transform=`rotate(${newTotal}deg)`;totalDeg=newTotal;setTimeout(()=>{setTimeout(()=>showQuestion(seg),PAUSE_MS);},SPIN_MS);}
-function showQuestion(num){const data=QUESTIONS[num-1];document.getElementById('q-num').textContent=num;document.getElementById('q-text').textContent=data.q;document.getElementById('q-deco-img').src=DECO_IMGS[(num-1)%5];const resultEl=document.getElementById('q-result');resultEl.className='q-result';resultEl.textContent='';document.getElementById('btn-volver').classList.remove('show');const answersEl=document.getElementById('q-answers');answersEl.innerHTML='';data.opts.forEach((text,idx)=>{const btn=document.createElement('button');btn.className='ans-btn';btn.innerHTML=`<em class="ans-icon"></em><span>${text}</span>`;btn.addEventListener('click',()=>onAnswer(btn,idx,data.correct),{once:true});answersEl.appendChild(btn);});document.getElementById('app').classList.add('show-q');}
-function onAnswer(clickedBtn,selected,correct){const allBtns=[...document.querySelectorAll('.ans-btn')];allBtns.forEach(b=>b.classList.add('disabled'));if(selected===correct){clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-correct');clickedBtn.querySelector('.ans-icon').textContent='✓';setResult(true);}else{clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-wrong');clickedBtn.querySelector('.ans-icon').textContent='✗';allBtns[correct].classList.remove('disabled');allBtns[correct].classList.add('show-correct');allBtns[correct].querySelector('.ans-icon').textContent='✓';setResult(false);}document.getElementById('btn-volver').classList.add('show');}
+function showQuestion(num){const data=QUESTIONS[num-1];document.getElementById('q-num').textContent=num;document.getElementById('q-text').textContent=data.q;document.getElementById('q-deco-img').src=DECO_IMGS[(num-1)%5];const resultEl=document.getElementById('q-result');resultEl.className='q-result';resultEl.textContent='';document.getElementById('btn-volver').classList.remove('show');const answersEl=document.getElementById('q-answers');answersEl.innerHTML='';data.opts.forEach((text,idx)=>{const btn=document.createElement('button');btn.className='ans-btn';btn.innerHTML=`<em class="ans-icon"></em><span>${text}</span>`;btn.addEventListener('click',()=>onAnswer(btn,idx,data.correct),{once:true});answersEl.appendChild(btn);});document.getElementById('app').classList.add('show-q'); setTimeout(()=>startTimer(data.correct), 100);}
+function onAnswer(clickedBtn,selected,correct){stopTimer();const allBtns=[...document.querySelectorAll('.ans-btn')];allBtns.forEach(b=>b.classList.add('disabled'));if(selected===correct){clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-correct');clickedBtn.querySelector('.ans-icon').textContent='✓';setResult(true);}else{clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-wrong');clickedBtn.querySelector('.ans-icon').textContent='✗';allBtns[correct].classList.remove('disabled');allBtns[correct].classList.add('show-correct');allBtns[correct].querySelector('.ans-icon').textContent='✓';setResult(false);}document.getElementById('btn-volver').classList.add('show');}
 function setResult(ok){const el=document.getElementById('q-result');el.className=ok?'q-result correct':'q-result wrong';el.innerHTML=ok?'🎉 ¡Correcto! Excelente respuesta.':'❌ Incorrecto. La respuesta correcta está marcada en verde.';}
-function volverRuleta(){document.getElementById('app').classList.remove('show-q');setTimeout(()=>{const el=document.getElementById('wheel-spin');el.style.transition='none';el.style.transform='rotate(0deg)';totalDeg=0;spinning=false;document.getElementById('tapHint').style.opacity='1';},350);}
+function volverRuleta(){stopTimer();document.getElementById('app').classList.remove('show-q');setTimeout(()=>{const el=document.getElementById('wheel-spin');el.style.transition='none';el.style.transform='rotate(0deg)';totalDeg=0;spinning=false;document.getElementById('tapHint').style.opacity='1';},350);}
 document.addEventListener('DOMContentLoaded',()=>{const wrap=document.getElementById('wheelWrap');wrap.addEventListener('click',handleWheelClick);wrap.addEventListener('touchend',e=>{e.preventDefault();handleWheelClick();},{passive:false});});
 </script>
 </body>
