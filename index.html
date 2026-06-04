@@ -60,17 +60,14 @@ html, body {
   transform: translateX(-50%);
   z-index:20;
 }
-.logo-wrap img {
-  width: clamp(160px, 36.4vh, 700px);
-  height: auto; display:block;
-}
+.logo-wrap img { width:clamp(160px,36.4vh,700px); height:auto; display:block; }
 
 .wheel-wrap {
   position:absolute;
-  top: 45%; left: -45%;
-  transform: translateY(-40%);
-  width: clamp(300px, 63vh, 1350px);
-  aspect-ratio: 1/1;
+  top:45%; left:-45%;
+  transform:translateY(-40%);
+  width:clamp(300px,63vh,1350px);
+  aspect-ratio:1/1;
   cursor:pointer;
   user-select:none; -webkit-user-select:none;
   z-index:10;
@@ -82,23 +79,19 @@ html, body {
   display:block; object-fit:contain;
   transform-origin:50% 50%;
 }
-
 .wheel-contorno {
   position:absolute; top:0; left:0;
   width:100%; height:100%;
   display:block; object-fit:contain;
   pointer-events:none; z-index:3;
 }
-
 .wheel-centro {
-  position:absolute;
-  top:50%; left:50%;
+  position:absolute; top:50%; left:50%;
   transform:translate(-50%,-50%);
   width:20%; height:20%;
   display:block; object-fit:contain;
   pointer-events:none; z-index:4;
 }
-
 .wheel-pointer {
   position:absolute;
   right:-8%; top:50%;
@@ -122,8 +115,8 @@ html, body {
 
 .dog-wrap {
   position:absolute;
-  bottom: 7%; right: 2%;
-  height: clamp(120px, 28vh, 580px);
+  bottom:7%; right:2%;
+  height:clamp(120px,28vh,580px);
   pointer-events:none; z-index:5;
 }
 .dog-wrap img { height:100%; width:auto; display:block; }
@@ -132,20 +125,18 @@ html, body {
   position:absolute;
   bottom:0; left:0;
   width:100%; height:auto;
-  display:block;
-  pointer-events:none; z-index:4;
+  display:block; pointer-events:none; z-index:4;
 }
 
 /* ================================================================
    PANTALLA 2 — PREGUNTAS
 ================================================================ */
 #scr-question {
-  background: linear-gradient(to right,
-    #0d302a  0%, #0d302a 36%, #163d34 53%,
-    #266348 68%, #3d9460 83%, #58b46e 100%);
+  background:linear-gradient(to right,
+    #0d302a 0%,#0d302a 36%,#163d34 53%,
+    #266348 68%,#3d9460 83%,#58b46e 100%);
   overflow-y:auto; overflow-x:hidden;
 }
-
 #scr-question::before {
   content:''; position:absolute; inset:0;
   background-image:radial-gradient(circle,rgba(88,180,110,0.05) 1px,transparent 1px);
@@ -156,18 +147,12 @@ html, body {
 .q-content {
   position:relative; min-height:100%;
   display:flex; flex-direction:column; justify-content:center;
-  padding: 7% 9% 22% 9%;
-  gap: clamp(12px, 2.2vh, 30px);
+  padding:7% 9% 22% 9%;
+  gap:clamp(12px,2.2vh,30px);
   z-index:1;
 }
 
-/* ── BADGE + CONTADOR ─────────────────────────
-   Badge izquierda, contador circular derecha
-─────────────────────────────────────────────── */
-.q-badge {
-  display:flex; align-items:center;
-  justify-content:space-between;
-}
+.q-badge { display:flex; align-items:center; justify-content:space-between; }
 .q-badge-left { display:flex; align-items:center; gap:14px; }
 
 .q-num-circle {
@@ -175,8 +160,7 @@ html, body {
   background:var(--green); border-radius:50%;
   display:flex; align-items:center; justify-content:center;
   font-size:clamp(1.1rem,3.5vh,2.2rem); font-weight:800; color:white;
-  flex-shrink:0;
-  box-shadow:0 0 0 4px rgba(88,180,110,0.25);
+  flex-shrink:0; box-shadow:0 0 0 4px rgba(88,180,110,0.25);
 }
 .q-label-txt {
   text-transform:uppercase; letter-spacing:3px;
@@ -184,91 +168,39 @@ html, body {
   font-size:clamp(0.7rem,1.6vh,1rem); font-weight:600;
 }
 
-/* BARRA DE TIEMPO ──────────────────────────────
-   Aparece debajo del badge, se vacía de izquierda
-   a derecha. Se vuelve roja cuando quedan <= 5 seg.
-   Cambia TIMER_SECS en el JS para más/menos tiempo.
-─────────────────────────────────────────────── */
-.q-timer-bar-wrap {
-  display:flex; align-items:center; gap:clamp(8px,1.2vw,16px);
-}
-/* Icono reloj */
-.q-timer-icon {
-  font-size: clamp(1rem, 2.2vh, 1.8rem);
-  flex-shrink:0;
-  transition: color 0.4s;
-  color: rgba(255,255,255,0.7);
-}
-/* Contenedor barra */
-.q-timer-track {
-  flex:1;
-  height: clamp(6px, 1vh, 12px);
-  background: rgba(255,255,255,0.12);
-  border-radius: 999px;
-  overflow:hidden;
-}
-/* Barra que se achica */
-.q-timer-fill {
-  height:100%;
-  width:100%;
-  background: linear-gradient(to right, #3dbf6a, #b9efce);
-  border-radius: 999px;
-  transform-origin: left center;
-  transition: transform 1s linear, background 0.5s;
-}
-/* Número de segundos */
-.q-timer-num {
-  font-size: clamp(0.8rem, 1.8vh, 1.4rem);
-  font-weight:800; color:white;
-  font-family: var(--font);
-  flex-shrink:0;
-  min-width: 2.5ch;
-  text-align:right;
-  transition: color 0.4s;
-}
-/* Estado urgente (<=5 seg) */
-.q-timer-bar-wrap.urgent .q-timer-fill {
-  background: linear-gradient(to right, #e05252, #ffaaaa);
-}
-.q-timer-bar-wrap.urgent .q-timer-num  { color: #ffaaaa; }
-.q-timer-bar-wrap.urgent .q-timer-icon { color: #ffaaaa; }
+.q-timer-bar-wrap { display:flex; align-items:center; gap:clamp(8px,1.2vw,16px); }
+.q-timer-icon { font-size:clamp(1rem,2.2vh,1.8rem); flex-shrink:0; transition:color 0.4s; color:rgba(255,255,255,0.7); }
+.q-timer-track { flex:1; height:clamp(6px,1vh,12px); background:rgba(255,255,255,0.12); border-radius:999px; overflow:hidden; }
+.q-timer-fill { height:100%; width:100%; background:linear-gradient(to right,#3dbf6a,#b9efce); border-radius:999px; transform-origin:left center; transition:transform 1s linear,background 0.5s; }
+.q-timer-num { font-size:clamp(0.8rem,1.8vh,1.4rem); font-weight:800; color:white; font-family:var(--font); flex-shrink:0; min-width:2.5ch; text-align:right; transition:color 0.4s; }
+.q-timer-bar-wrap.urgent .q-timer-fill { background:linear-gradient(to right,#e05252,#ffaaaa); }
+.q-timer-bar-wrap.urgent .q-timer-num  { color:#ffaaaa; }
+.q-timer-bar-wrap.urgent .q-timer-icon { color:#ffaaaa; }
 
-.q-text {
-  color:var(--white);
-  font-size:clamp(1.2rem, 4.5vh, 2.6rem);
-  font-weight:700; line-height:1.5;
-}
+.q-text { color:var(--white); font-size:clamp(1.2rem,4.5vh,2.6rem); font-weight:700; line-height:1.5; }
 
-.q-answers {
-  display:flex; flex-direction:column;
-  gap:clamp(12px, 3vh, 26px);
-}
+.q-answers { display:flex; flex-direction:column; gap:clamp(12px,3vh,26px); }
 
 .ans-btn {
   background:rgba(255,255,255,0.95);
   border:3px solid transparent; border-radius:999px;
-  padding:clamp(14px, 2.6vh, 32px) clamp(20px, 3vw, 44px);
-  font-size:clamp(1rem, 2.6vh, 1.9rem);
+  padding:clamp(14px,2.6vh,32px) clamp(20px,3vw,44px);
+  font-size:clamp(1rem,2.6vh,1.9rem);
   font-weight:500; font-family:var(--font); color:#0d2a24;
   cursor:pointer; text-align:left;
   display:flex; align-items:center; gap:14px; line-height:1.4;
-  transition:background .3s, border-color .3s, transform .2s, color .3s, box-shadow .3s;
+  transition:background .3s,border-color .3s,transform .2s,color .3s,box-shadow .3s;
   box-shadow:0 2px 12px rgba(0,0,0,0.15);
   -webkit-tap-highlight-color:transparent;
 }
 .ans-btn:not(.disabled):hover,
-.ans-btn:not(.disabled):active {
-  border-color:var(--gdk);
-  transform:translateX(8px);
-  box-shadow:0 4px 20px rgba(88,180,110,0.25);
-}
+.ans-btn:not(.disabled):active { border-color:var(--gdk); transform:translateX(8px); box-shadow:0 4px 20px rgba(88,180,110,0.25); }
 .ans-icon { font-style:normal; font-size:1.25em; min-width:1.5em; text-align:center; flex-shrink:0; }
-
-.ans-btn.is-correct  { background:#b9efce; color:#0a2b1e; border-color:#b9efce; transform:none; box-shadow:0 4px 24px rgba(185,239,206,0.5); }
+.ans-btn.is-correct   { background:#b9efce; color:#0a2b1e; border-color:#b9efce; transform:none; box-shadow:0 4px 24px rgba(185,239,206,0.5); }
 .ans-btn.is-correct .ans-icon { animation:pop .4s ease; }
-.ans-btn.is-wrong    { background:#f6ceb9; color:#4a1a08; border-color:#f6ceb9; transform:none; }
-.ans-btn.show-correct{ background:#b9efce; color:#0a2b1e; border-color:#b9efce; animation:reveal .5s ease; }
-.ans-btn.disabled    { pointer-events:none; opacity:.7; }
+.ans-btn.is-wrong     { background:#f6ceb9; color:#4a1a08; border-color:#f6ceb9; transform:none; }
+.ans-btn.show-correct { background:#b9efce; color:#0a2b1e; border-color:#b9efce; animation:reveal .5s ease; }
+.ans-btn.disabled     { pointer-events:none; opacity:.7; }
 
 @keyframes pop    { 0%{transform:scale(1)} 50%{transform:scale(1.4)} 100%{transform:scale(1)} }
 @keyframes reveal { 0%{transform:translateX(0)} 25%{transform:translateX(-6px)} 50%{transform:translateX(6px)} 100%{transform:translateX(0)} }
@@ -284,11 +216,7 @@ html, body {
 .q-result.wrong   { display:block; background:rgba(246,206,185,0.2); color:#f6ceb9; border:2px solid rgba(246,206,185,0.35); }
 @keyframes fadeUp { from{opacity:0;transform:translateY(16px) scale(.96)} to{opacity:1;transform:translateY(0) scale(1)} }
 
-.q-deco {
-  position:absolute; bottom: 0%; right: 1%;
-  width: clamp(160px, 50vw, 400px);
-  pointer-events:none; z-index:0;
-}
+.q-deco { position:absolute; bottom:0%; right:1%; width:clamp(160px,50vw,400px); pointer-events:none; z-index:0; }
 .q-deco img { display:block; width:100%; height:auto; }
 
 .btn-volver {
@@ -300,7 +228,7 @@ html, body {
   font-size:clamp(0.85rem,1.8vh,1.25rem); font-family:var(--font); font-weight:600;
   cursor:pointer; letter-spacing:0.5px;
   opacity:0; pointer-events:none;
-  transition:opacity .4s, background .25s, border-color .25s, transform .2s;
+  transition:opacity .4s,background .25s,border-color .25s,transform .2s;
   z-index:10; display:flex; align-items:center; gap:8px;
 }
 .btn-volver.show { opacity:1; pointer-events:all; }
@@ -308,7 +236,7 @@ html, body {
 .btn-volver svg   { width:1em; height:1em; flex-shrink:0; }
 
 /* ================================================================
-   RESPONSIVE — CADA VISTA SEPARADA
+   RESPONSIVE
 ================================================================ */
 
 /* 📺 55" */
@@ -321,9 +249,8 @@ html, body {
   .q-answers { gap:clamp(12px,3vh,26px); }
   .ans-btn { font-size:clamp(1rem,2.6vh,1.9rem); padding:clamp(14px,2.6vh,32px) clamp(20px,3vw,44px); }
   .q-deco { width:clamp(160px,50vw,400px); bottom:5%; right:5%; }
-  /* Barra de tiempo más gruesa en 55" */
-  .q-timer-track { height: clamp(10px, 1.2vh, 18px); }
-  .q-timer-num { font-size: clamp(1rem, 2.2vh, 1.8rem); }
+  .q-timer-track { height:clamp(10px,1.2vh,18px); }
+  .q-timer-num { font-size:clamp(1rem,2.2vh,1.8rem); }
 }
 
 /* 📱 MÓVIL */
@@ -338,21 +265,42 @@ html, body {
   .ans-btn { font-size:clamp(0.8rem,3vw,1rem); padding:clamp(8px,1.5vh,14px) clamp(12px,3vw,20px); }
   .q-deco { width:38vw; bottom:5%; right:5%; }
   .dog-floor { height:6vh; object-fit:cover; object-position:top; }
-  /* Barra de tiempo en móvil */
-  .q-timer-track { height: 5px; }
-  .q-timer-icon { font-size: 0.9rem; }
+  .q-timer-track { height:5px; }
+  .q-timer-icon { font-size:0.9rem; }
 }
 
-/* 📱 TABLET */
-@media (min-width:601px) and (max-width:1024px) and (orientation:portrait) {
-  .wheel-wrap { left:-29%; top:45%; transform:translateY(-40%); width:clamp(320px,70vh,950px); }
-  .logo-wrap img { width:clamp(120px,27vh,320px); }
-  .dog-wrap { height:clamp(110px,45vh,650px); bottom:5%; right:-3%; }
-  .q-text { font-size:clamp(1rem,2.8vh,1.8rem); }
+/* ══════════════════════════════════════════════
+   📱 TABLET PEQUEÑA (601–780px portrait)
+   ══════════════════════════════════════════════ */
+@media (min-width:601px) and (max-width:780px) and (orientation:portrait) {
+  .wheel-wrap { left:-42%; top:48%; transform:translateY(-45%); width:clamp(300px,62vh,750px); }
+  .logo-wrap img { width:clamp(120px,24vh,280px); }
+  .tap-hint { top:34%; right:3%; font-size:0.8rem; }
+  .dog-wrap { height:clamp(100px,26vh,380px); bottom:5%; right:1%; }
+  .dog-floor { height:7vh; object-fit:cover; object-position:top; }
+  .q-content { padding:7% 6% 26% 6%; gap:clamp(8px,1.5vh,18px); }
+  .q-text { font-size:clamp(1rem,2.6vh,1.7rem); }
+  .q-answers { gap:clamp(7px,1.3vh,14px); }
+  .ans-btn { font-size:clamp(0.82rem,1.9vh,1.2rem); padding:clamp(9px,1.6vh,20px) clamp(13px,2vw,28px); }
+  .q-deco { width:clamp(110px,26vw,240px); bottom:3%; right:3%; }
+}
+
+/* ══════════════════════════════════════════════
+   📱 TABLET GRANDE / KIOSCO (781–1024px portrait)
+   → Fix para pantalla ~782×1366 del evento
+   ══════════════════════════════════════════════ */
+@media (min-width:781px) and (max-width:1024px) and (orientation:portrait) {
+  /* Ruleta más a la izquierda para que el perro quede visible */
+  .wheel-wrap { left:-48%; top:46%; transform:translateY(-42%); width:clamp(350px,63vh,900px); }
+  .logo-wrap img { width:clamp(140px,28vh,360px); }
+  .tap-hint { top:36%; right:4%; font-size:0.9rem; }
+  .dog-wrap { height:clamp(130px,27vh,430px); bottom:5%; right:2%; }
+  .dog-floor { height:8vh; object-fit:cover; object-position:top; }
+  .q-content { padding:7% 8% 24% 8%; gap:clamp(10px,1.8vh,22px); }
+  .q-text { font-size:clamp(1rem,2.8vh,1.9rem); }
   .q-answers { gap:clamp(8px,1.5vh,16px); }
   .ans-btn { font-size:clamp(0.85rem,2vh,1.3rem); padding:clamp(10px,1.8vh,22px) clamp(14px,2vw,30px); }
-  .q-deco { width:clamp(120px,28vw,260px); bottom:3%; right:3%; }
-  .dog-floor { height:8vh; object-fit:cover; object-position:top; }
+  .q-deco { width:clamp(120px,28vw,280px); bottom:3%; right:3%; }
 }
 
 /* 💻 DESKTOP */
@@ -390,17 +338,13 @@ html, body {
 <!-- PANTALLA 2 · PREGUNTAS -->
 <div id="scr-question" class="screen">
   <div class="q-content">
-
     <div class="q-badge">
       <div class="q-badge-left">
         <div class="q-num-circle" id="q-num">1</div>
         <div class="q-label-txt">Pregunta</div>
       </div>
     </div>
-
     <div class="q-text" id="q-text"></div>
-
-    <!-- Barra de tiempo con icono reloj -->
     <div class="q-timer-bar-wrap" id="q-timer">
       <span class="q-timer-icon">⏱</span>
       <div class="q-timer-track">
@@ -411,11 +355,9 @@ html, body {
     <div class="q-answers" id="q-answers"></div>
     <div class="q-result" id="q-result"></div>
   </div>
-
   <div class="q-deco">
     <img id="q-deco-img" src="imagen_decorativa_preguntas-05.png" alt="">
   </div>
-
   <button class="btn-volver" id="btn-volver" onclick="volverRuleta()">
     <svg viewBox="0 0 16 16" fill="currentColor">
       <path d="M3.86 8.75l4.72 4.72a.75.75 0 1 1-1.06 1.06L1.97 8.97a.75.75 0 0 1 0-1.06l5.55-5.56a.75.75 0 0 1 1.06 1.06L3.86 7.25H14a.75.75 0 0 1 0 1.5H3.86z"/>
@@ -441,14 +383,90 @@ const QUESTIONS=[
 ];
 const DECO_IMGS=['imagen_decorativa_preguntas-05.png','imagen_decorativa_preguntas-06.png','imagen_decorativa_preguntas-07.png','imagen_decorativa_preguntas-08.png','imagen_decorativa_preguntas-09.png'];
 const N_SEG=10,DEG_SEG=36,PTR_DEG=90,SPIN_MS=4500,PAUSE_MS=1250;
-const TIMER_SECS=15;  /* ← segundos del contador, cámbialo para más o menos tiempo */
+const TIMER_SECS=15; /* ← segundos del contador */
 let spinning=false,totalDeg=0,timerInterval=null;
 
-/* ── CONTADOR ──────────────────────────────────
-   startTimer(correctIdx) → arranca al mostrar pregunta
-   stopTimer()            → se llama al responder o volver
-   timeOut(correctIdx)    → se llama cuando llega a 0
-─────────────────────────────────────────────── */
+/* ── SONIDOS (Web Audio API) ── */
+const AC=new(window.AudioContext||window.webkitAudioContext)();
+function unlockAudio(){if(AC.state==='suspended')AC.resume();}
+
+function playSpinSound(){
+  let tick=0;const totalTicks=26;
+  function nextTick(){
+    if(tick>=totalTicks)return;
+    const progress=tick/totalTicks;
+    const delay=40+progress*310;
+    setTimeout(()=>{
+      const now=AC.currentTime;
+      const o1=AC.createOscillator(),g1=AC.createGain();
+      o1.connect(g1);g1.connect(AC.destination);
+      o1.type='triangle';
+      o1.frequency.value=500+(1-progress)*300+Math.random()*80;
+      g1.gain.setValueAtTime(0.28,now);
+      g1.gain.exponentialRampToValueAtTime(0.001,now+0.045);
+      o1.start(now);o1.stop(now+0.05);
+      const o2=AC.createOscillator(),g2=AC.createGain();
+      o2.connect(g2);g2.connect(AC.destination);
+      o2.type='sine';
+      o2.frequency.value=(500+(1-progress)*300)*2.1;
+      g2.gain.setValueAtTime(0.10,now);
+      g2.gain.exponentialRampToValueAtTime(0.001,now+0.03);
+      o2.start(now);o2.stop(now+0.035);
+      tick++;nextTick();
+    },delay);
+  }
+  nextTick();
+}
+
+function playCorrectSound(){
+  [[523,0],[659,0.12],[784,0.24],[1046,0.38]].forEach(([freq,t])=>{
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.connect(g);g.connect(AC.destination);
+    o.type='sine';o.frequency.value=freq;
+    g.gain.setValueAtTime(0,AC.currentTime+t);
+    g.gain.linearRampToValueAtTime(0.22,AC.currentTime+t+0.04);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+t+0.35);
+    o.start(AC.currentTime+t);o.stop(AC.currentTime+t+0.38);
+  });
+}
+
+function playWrongSound(){
+  [[300,0],[220,0.18],[160,0.38]].forEach(([freq,t])=>{
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.connect(g);g.connect(AC.destination);
+    o.type='sawtooth';o.frequency.value=freq;
+    g.gain.setValueAtTime(0,AC.currentTime+t);
+    g.gain.linearRampToValueAtTime(0.18,AC.currentTime+t+0.05);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+t+0.28);
+    o.start(AC.currentTime+t);o.stop(AC.currentTime+t+0.3);
+  });
+}
+
+function playTimeoutSound(){
+  [440,330,220].forEach((freq,i)=>{
+    const t=i*0.22;
+    const o=AC.createOscillator(),g=AC.createGain();
+    o.connect(g);g.connect(AC.destination);
+    o.type='square';o.frequency.value=freq;
+    g.gain.setValueAtTime(0,AC.currentTime+t);
+    g.gain.linearRampToValueAtTime(0.22,AC.currentTime+t+0.03);
+    g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+t+0.18);
+    o.start(AC.currentTime+t);o.stop(AC.currentTime+t+0.2);
+  });
+}
+
+function playTickTock(s){
+  const freq=(s%2===0)?1200:900;
+  const o=AC.createOscillator(),g=AC.createGain();
+  o.connect(g);g.connect(AC.destination);
+  o.type='sine';o.frequency.value=freq;
+  g.gain.setValueAtTime(0,AC.currentTime);
+  g.gain.linearRampToValueAtTime(0.25,AC.currentTime+0.015);
+  g.gain.exponentialRampToValueAtTime(0.001,AC.currentTime+0.09);
+  o.start(AC.currentTime);o.stop(AC.currentTime+0.1);
+}
+
+/* ── CONTADOR ── */
 function startTimer(correctIdx){
   clearInterval(timerInterval);
   let s=TIMER_SECS;
@@ -456,37 +474,37 @@ function startTimer(correctIdx){
   const numEl=document.getElementById('timer-num');
   const timerEl=document.getElementById('q-timer');
   timerEl.classList.remove('urgent');
-  fill.style.transform='scaleX(1)';   // barra llena al inicio
+  fill.style.transform='scaleX(1)';
   numEl.textContent=s;
   timerInterval=setInterval(()=>{
     s--;
     numEl.textContent=s;
-    fill.style.transform='scaleX('+String(s/TIMER_SECS)+')';
-    if(s<=5) timerEl.classList.add('urgent');
-    if(s<=0){ clearInterval(timerInterval); timeOut(correctIdx); }
+    fill.style.transform='scaleX('+String(Math.max(0,s)/TIMER_SECS)+')';
+    if(s<=5)timerEl.classList.add('urgent');
+    if(s>=1&&s<=4)playTickTock(s);
+    if(s<=0){clearInterval(timerInterval);playTimeoutSound();setTimeout(()=>timeOut(correctIdx),700);}
   },1000);
 }
-
-function stopTimer(){ clearInterval(timerInterval); }
-
+function stopTimer(){clearInterval(timerInterval);}
 function timeOut(correctIdx){
   const allBtns=[...document.querySelectorAll('.ans-btn')];
   allBtns.forEach(b=>b.classList.add('disabled'));
   const cb=allBtns[correctIdx];
-  if(cb){ cb.classList.remove('disabled'); cb.classList.add('show-correct'); cb.querySelector('.ans-icon').textContent='✓'; }
+  if(cb){cb.classList.remove('disabled');cb.classList.add('show-correct');cb.querySelector('.ans-icon').textContent='✓';}
   const el=document.getElementById('q-result');
   el.className='q-result wrong';
   el.innerHTML='⏱️ ¡Tiempo agotado! La respuesta correcta está marcada en verde.';
   document.getElementById('btn-volver').classList.add('show');
 }
 
-function handleWheelClick(){if(spinning)return;spinning=true;document.getElementById('tapHint').style.opacity='0';doSpin(Math.floor(Math.random()*N_SEG)+1);}
+/* ── LÓGICA PRINCIPAL ── */
+function handleWheelClick(){if(spinning)return;unlockAudio();spinning=true;document.getElementById('tapHint').style.opacity='0';playSpinSound();doSpin(Math.floor(Math.random()*N_SEG)+1);}
 function doSpin(seg){const el=document.getElementById('wheel-spin');const segCenter=(seg-1)*DEG_SEG;const alignAngle=((PTR_DEG-segCenter)%360+360)%360;const curMod=totalDeg%360;let delta=(alignAngle-curMod+360)%360;if(delta<10)delta+=360;const newTotal=totalDeg+5*360+delta;el.style.transition=`transform ${SPIN_MS}ms cubic-bezier(0.08,0.92,0.18,1)`;el.style.transform=`rotate(${newTotal}deg)`;totalDeg=newTotal;setTimeout(()=>{setTimeout(()=>showQuestion(seg),PAUSE_MS);},SPIN_MS);}
 function showQuestion(num){const data=QUESTIONS[num-1];document.getElementById('q-num').textContent=num;document.getElementById('q-text').textContent=data.q;document.getElementById('q-deco-img').src=DECO_IMGS[(num-1)%5];const resultEl=document.getElementById('q-result');resultEl.className='q-result';resultEl.textContent='';document.getElementById('btn-volver').classList.remove('show');const answersEl=document.getElementById('q-answers');answersEl.innerHTML='';data.opts.forEach((text,idx)=>{const btn=document.createElement('button');btn.className='ans-btn';btn.innerHTML=`<em class="ans-icon"></em><span>${text}</span>`;btn.addEventListener('click',()=>onAnswer(btn,idx,data.correct),{once:true});answersEl.appendChild(btn);});document.getElementById('app').classList.add('show-q');setTimeout(()=>startTimer(data.correct),100);}
-function onAnswer(clickedBtn,selected,correct){stopTimer();const allBtns=[...document.querySelectorAll('.ans-btn')];allBtns.forEach(b=>b.classList.add('disabled'));if(selected===correct){clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-correct');clickedBtn.querySelector('.ans-icon').textContent='✓';setResult(true);}else{clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-wrong');clickedBtn.querySelector('.ans-icon').textContent='✗';allBtns[correct].classList.remove('disabled');allBtns[correct].classList.add('show-correct');allBtns[correct].querySelector('.ans-icon').textContent='✓';setResult(false);}document.getElementById('btn-volver').classList.add('show');}
+function onAnswer(clickedBtn,selected,correct){unlockAudio();stopTimer();const allBtns=[...document.querySelectorAll('.ans-btn')];allBtns.forEach(b=>b.classList.add('disabled'));if(selected===correct){clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-correct');clickedBtn.querySelector('.ans-icon').textContent='✓';playCorrectSound();setResult(true);}else{clickedBtn.classList.remove('disabled');clickedBtn.classList.add('is-wrong');clickedBtn.querySelector('.ans-icon').textContent='✗';allBtns[correct].classList.remove('disabled');allBtns[correct].classList.add('show-correct');allBtns[correct].querySelector('.ans-icon').textContent='✓';playWrongSound();setResult(false);}document.getElementById('btn-volver').classList.add('show');}
 function setResult(ok){const el=document.getElementById('q-result');el.className=ok?'q-result correct':'q-result wrong';el.innerHTML=ok?'🎉 ¡Correcto! Excelente respuesta.':'❌ Incorrecto. La respuesta correcta está marcada en verde.';}
 function volverRuleta(){stopTimer();document.getElementById('app').classList.remove('show-q');setTimeout(()=>{const el=document.getElementById('wheel-spin');el.style.transition='none';el.style.transform='rotate(0deg)';totalDeg=0;spinning=false;document.getElementById('tapHint').style.opacity='1';},350);}
-document.addEventListener('DOMContentLoaded',()=>{const wrap=document.getElementById('wheelWrap');wrap.addEventListener('click',handleWheelClick);wrap.addEventListener('touchend',e=>{e.preventDefault();handleWheelClick();},{passive:false});});
+document.addEventListener('DOMContentLoaded',()=>{const wrap=document.getElementById('wheelWrap');wrap.addEventListener('click',handleWheelClick);wrap.addEventListener('touchend',e=>{e.preventDefault();unlockAudio();handleWheelClick();},{passive:false});});
 </script>
 </body>
 </html>
